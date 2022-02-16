@@ -1,6 +1,7 @@
 import List from 'pages/audio-call/components/list';
 import Button from 'pages/audio-call/components/button';
-import BaseComponent from '../../../common-components/base-component';
+import BaseComponent from 'common-components/base-component';
+import { DIFFICULTY_LEVELS, BUTTON_TEXT } from 'pages/audio-call/_constants';
 
 class GameWindow extends BaseComponent {
   private gameContainer: BaseComponent<HTMLElement>;
@@ -16,7 +17,7 @@ class GameWindow extends BaseComponent {
     this.createDescription('Данная игра поможет улучшить ваше восприятие речи на слух');
     this.createLevelText('Выберите уровень сложности');
     const levelsList = new List(this.gameContainer.node, 6);
-    const button = new Button(this.gameContainer.node, 'Начать');
+    const button = new Button(this.gameContainer.node, BUTTON_TEXT.start);
   }
 
   createTitle(name: string) {

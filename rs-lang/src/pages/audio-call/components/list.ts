@@ -1,3 +1,4 @@
+import { DIFFICULTY_LEVELS, BUTTON_TEXT } from 'pages/audio-call/_constants';
 import BaseComponent from '../../../common-components/base-component';
 
 class List {
@@ -34,13 +35,25 @@ class List {
     for (let i = 1; i <= amount; i++) {
       itemsArray.push(this.createListItem());
     }
-    this.addTextToItems(itemsArray, ['1', '2', '3', '4', '5', '6']);
+    this.addTextToItems(itemsArray, DIFFICULTY_LEVELS);
+    this.chooseLevel(itemsArray);
   }
 
   addTextToItems(itemsArray: Array<HTMLElement>, textArray: Array<string>) {
     for (let i = 0; i < textArray.length; i++) {
       itemsArray[i].innerHTML = textArray[i];
     }
+  }
+
+  chooseLevel(itemsArray: Array<HTMLElement>) {
+    this.listContainer.node.addEventListener('click', event => {
+      const target = event.target as HTMLElement;
+      const targetNum = +target.innerHTML - 1;
+      const choosenLevel = itemsArray.splice(targetNum, 1);
+      itemsArray.forEach(item => {
+        item.classList.add('invisible');
+      });
+    });
   }
 }
 
