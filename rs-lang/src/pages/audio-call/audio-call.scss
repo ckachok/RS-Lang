@@ -108,25 +108,16 @@ $whiteText: rgba(255, 255, 255, 1);
 .audio-game__sound-button {
     height: 150px;
 	width: 150px;
-	border: 4px solid $greyBorder;
 	border-radius: 50%;
-	padding: 25px;
+	display: block;
+	background-image: url(../../assets/svg/audio-call/audio-big.svg);
 
 	&:hover {
         box-shadow: 0px -1px 100px 0px $blueBorder,
     0px 1px 100px 0px $blueBorder,
     -1px 0px 100px 0px $blueBorder,
     1px 0px 100px 0px $blueBorder;
-    }
-		
-	
-	&__icon {
-        width: 100px;
-		height: 100px;
-		display: block;
-		background-image: url(../../assets/svg/audio-call/audio-big.svg);
-    }
-		
+    }	
 }
 	
 	
