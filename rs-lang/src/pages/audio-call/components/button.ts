@@ -5,7 +5,6 @@ class Button {
 
   constructor(parentNode: HTMLElement) {
     this.parentNode = parentNode;
-    // this.createButton();
   }
 
   createButton(text: string, className: string) {

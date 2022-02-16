@@ -1,17 +1,24 @@
-import { DIFFICULTY_LEVELS, BUTTON_TEXT } from 'pages/audio-call/_constants';
-import BaseComponent from '../../../common-components/base-component';
+import LevelData from 'pages/audio-call/components/level-data';
+import BaseComponent from 'common-components/base-component';
+import { IListClickInfo } from 'types/interfaces';
 
 class List {
   private listContainer: BaseComponent<HTMLElement>;
   public parentNode: HTMLElement;
   public amount: number;
+  public callback: (info: IListClickInfo) => void;
+  public elements: Array<string>;
+  public itemsArray: Array<HTMLElement>;
 
-  constructor(parentNode: HTMLElement, amount: number) {
+  constructor(parentNode: HTMLElement, elements: Array<string>, callback: (info: IListClickInfo) => void) {
     this.parentNode = parentNode;
-    this.amount = amount;
+    this.elements = elements;
+    this.amount = elements.length;
+    this.callback = callback;
   }
 
   createContainer(className: string, childName: string) {
+    console.log('createContainer', className, childName);
     this.listContainer = new BaseComponent(this.parentNode, 'ul', className);
     this.createItems(this.amount, childName);
   }
@@ -26,45 +33,29 @@ class List {
   }
 
   createItems(amount: number, className: string) {
-    const itemsArray = [];
-    for (let i = 1; i <= amount; i++) {
-      itemsArray.push(this.createListItem(className));
+    this.itemsArray = [];
+
+    for (let i = 0; i < amount; i++) {
+      this.itemsArray.push(this.createListItem(className));
+      this.itemsArray[i].innerHTML = this.elements[i];
     }
 
-    if (className === 'level-option') {
-      this.addTextToItems(itemsArray, ['завтрак', 'вино', 'наслаждаться', 'путешествовать', 'лодка']);
-      this.chooseOption(itemsArray);
-    } else {
-      this.addTextToItems(itemsArray, DIFFICULTY_LEVELS);
-      this.chooseLevel(itemsArray);
-    }
+    this.listContainer.node.addEventListener('click', event => this.onItemClick(event));
   }
 
-  addTextToItems(itemsArray: Array<HTMLElement>, textArray: Array<string>) {
-    for (let i = 0; i < textArray.length; i++) {
-      itemsArray[i].innerHTML = textArray[i];
-    }
-  }
+  onItemClick(mouseEvent: MouseEvent) {
+    const target = mouseEvent.target as HTMLElement;
+    if (!(target.closest('li'))) return;
 
-  chooseLevel(itemsArray: Array<HTMLElement>) {
-    this.listContainer.node.addEventListener('click', event => {
-      const target = event.target as HTMLElement;
-      if (!(target.closest('li'))) return;
-      const targetNum = +target.innerHTML - 1;
-      const choosenLevel = itemsArray.splice(targetNum, 1);
-      itemsArray.forEach(item => {
-        item.classList.add('invisible');
-      });
-    });
-  }
+    const itemIndex = this.itemsArray.indexOf(target);
+    const element = this.elements[itemIndex];
 
-  chooseOption(itemsArray: Array<HTMLElement>) {
-    this.listContainer.node.addEventListener('click', event => {
-      const target = event.target as HTMLElement;
-      if (!(target.closest('li'))) return;
-      const userAnswer = target.innerHTML;
-      console.log(userAnswer);
-    });
+    const info: IListClickInfo = {
+      index: itemIndex,
+      label: element,
+      event: mouseEvent
+    };
+    this.callback(info);
   }
 }
 
