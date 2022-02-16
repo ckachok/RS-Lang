@@ -20,7 +20,7 @@ abstract class Page {
     this.createMain();
     this.footer = new Footer(this.parentNode, 'footer', 'footer');
     this.cover = new Cover(this.parentNode, 'div', 'cover');
-    this.authorization = new Authorization(this.parentNode, 'div', 'authorization');
+    // this.authorization = new Authorization(this.parentNode, 'div', 'authorization');
     this.startMenuInteractionCycle();
     this.startUserAuthorizationCycle();
     this.startCoverInteractionCycle();
