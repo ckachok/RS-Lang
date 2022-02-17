@@ -117,3 +117,8 @@ export interface IWordData {
   word: string;
   wordTranslate: string;
 }
+
+export interface IUserAnswersCount {
+  correct: number;
+  wrong: number;
+}

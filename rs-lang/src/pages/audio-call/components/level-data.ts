@@ -17,15 +17,14 @@ class LevelData {
     return data;
   }
 
-  generateAnswers(data: Array<IWordData>): Array<string> {
-    const ANSWERS: Array<string> = [];
+  generateAnswers(data: Array<IWordData>, answersArray: Array<string>): Array<string> {
     do {
       const newWord = data[this.generateRandomNumber()].wordTranslate;
-      if (!ANSWERS.includes(newWord)) {
-        ANSWERS.push(newWord);
+      if (!answersArray.includes(newWord)) {
+        answersArray.push(newWord);
       }
-    } while (ANSWERS.length < 4);
-    return ANSWERS;
+    } while (answersArray.length < 5);
+    return answersArray;
   }
 }
 
