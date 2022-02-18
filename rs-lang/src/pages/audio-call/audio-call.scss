@@ -6,7 +6,8 @@ $blackText: #000000;
 $whiteText: rgba(255, 255, 255, 1);
 
 .audio-game,
-.audio-game__level {
+.audio-game__level,
+.audio-game__results {
   height: 70vh;
   margin: 0 auto;
   display: flex;
@@ -14,8 +15,8 @@ $whiteText: rgba(255, 255, 255, 1);
   justify-content: space-between;
   align-items: center;
 
-  &__results__correct-name,
-  &__results__wrong-name {
+  &__correct-name,
+  &__wrong-name {
     font-size: 24px;
     font-style: normal;
     font-weight: 500;
@@ -23,6 +24,12 @@ $whiteText: rgba(255, 255, 255, 1);
     margin: 30px 0 20px 0;
     color: $greyBorder;
   }
+}
+
+.audio-game__results__wrong,
+.audio-game__results__correct {
+  gap: 23px;
+  display: grid;
 }
 
 .audio-game__level {
@@ -191,24 +198,20 @@ $whiteText: rgba(255, 255, 255, 1);
 
 .result-word {
   font-size: 24px;
-  font-style: normal;
   font-weight: 500;
-  letter-spacing: 0em;
-  text-align: left;
-  margin-bottom: 10px;
   color: $greyBorder;
 
   &::before {
+    cursor: pointer;
     content: url(../../assets/svg/audio-call/audio-small.svg);
     width: 31px;
     height: 31px;
-    display: inline-block;
     vertical-align: middle;
-    margin-right: 10px;
-  }
+    margin-right: 20px;
 
-  &__english {
-    color: $blackText;
+    &:hover {
+      color: red;
+    }
   }
 }
 
@@ -237,6 +240,11 @@ $whiteText: rgba(255, 255, 255, 1);
   &__count {
     background-color: rgba(255, 0, 0, 1);
   }
+}
+
+.audio-game__results__correct-name,
+.audio-game__results__wrong-name {
+  display: inline-block;
 }
 
 .invisible {

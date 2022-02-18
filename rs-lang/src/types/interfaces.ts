@@ -118,7 +118,12 @@ export interface IWordData {
   wordTranslate: string;
 }
 
+export interface IUserAnswer {
+  meaning: string;
+  audio: string;
+}
+
 export interface IUserAnswersCount {
-  correct: number;
-  wrong: number;
+  correct: Array<IUserAnswer>;
+  wrong: Array<IUserAnswer>;
 }

@@ -18,9 +18,9 @@ class List {
   }
 
   createContainer(className: string, childName: string) {
-    console.log('createContainer', className, childName);
     this.listContainer = new BaseComponent(this.parentNode, 'ul', className);
     this.createItems(this.amount, childName);
+    return this.listContainer;
   }
 
   createListItem(className: string) {
@@ -55,7 +55,9 @@ class List {
       label: element,
       event: mouseEvent
     };
-    this.callback(info);
+    if (this.callback !== null) {
+      this.callback(info);
+    }
   }
 }
 

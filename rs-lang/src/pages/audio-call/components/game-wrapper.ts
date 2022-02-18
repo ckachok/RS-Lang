@@ -23,13 +23,18 @@ class GameWindow extends BaseComponent {
     this.createContainer();
     this.levelIndex = 0;
     this.correctWordData = null;
-    this.userAnswersCount = { correct: 0, wrong: null };
+    this.userAnswersCount = { correct: [], wrong: [] };
     this.difficultyLevel = null;
   }
 
   createContainer() {
     this.gameContainer = new BaseComponent(this.node, 'div', 'audio-game');
-    this.createTitle('Аудиовызов', 'h1', 'audio-game__name');
+    this.createTitle(
+      this.gameContainer.node,
+      'Аудиовызов',
+      'h1',
+      'audio-game__name'
+    );
     this.createDescription(
       'Данная игра поможет улучшить ваше восприятие речи на слух'
     );
@@ -76,10 +81,16 @@ class GameWindow extends BaseComponent {
       'div',
       'audio-game__level'
     );
-    this.createTitle('Аудиовызов', 'h4', 'audio-game__level-name');
+    this.createTitle(
+      this.gameContainer.node,
+      'Аудиовызов',
+      'h4',
+      'audio-game__level-name'
+    );
     const soundButton = new Button(this.gameContainer.node);
     soundButton
-      .createButton('', 'audio-game__sound-button').addEventListener('click', () => this.onSoundButtonClick());
+      .createButton('', 'audio-game__sound-button')
+      .addEventListener('click', () => this.onSoundButtonClick(this.correctWordData.audio));
     const levelOptions = new List(
       this.gameContainer.node,
       this.answers.sort(),
@@ -92,11 +103,88 @@ class GameWindow extends BaseComponent {
       'audio-game__button'
     );
     actionButton.addEventListener('click', () => this.actionButton(actionButton));
-    setTimeout(() => this.onSoundButtonClick(), 500);
+    setTimeout(() => this.onSoundButtonClick(this.correctWordData.audio), 500);
+  }
+
+  showResults() {
+    this.gameContainer.destroy();
+    this.gameContainer = new BaseComponent(
+      this.node,
+      'div',
+      'audio-game__results'
+    );
+    this.createTitle(
+      this.gameContainer.node,
+      'Аудиовызов',
+      'h4',
+      'audio-game__level-name'
+    );
+    const resultsContainer = new BaseComponent(
+      this.gameContainer.node,
+      'div',
+      'audio-game__results-container'
+    ).node;
+
+    this.createTitle(
+      resultsContainer,
+      'Результаты',
+      'h5',
+      'audio-game__results-name'
+    );
+
+    this.createWrongResultsList(resultsContainer);
+    this.createCorrectResultsList(resultsContainer);
+  }
+
+  createCorrectResultsList(resultsContainer: HTMLElement) {
+    const correctAnswersArray: Array<string> = [];
+    this.userAnswersCount.correct.forEach(item => {
+      correctAnswersArray.push(item.meaning);
+    });
+
+    this.createTitle(
+      resultsContainer,
+      'Правильные ответы',
+      'h6',
+      'audio-game__results__correct-name'
+    );
+
+    const answersCount = new BaseComponent(resultsContainer, 'span', 'correct-answer__count').node;
+    answersCount.innerText = String(correctAnswersArray.length);
+    const correctResults = new List(
+      resultsContainer,
+      correctAnswersArray,
+      info => this.onSoundButtonClick(this.userAnswersCount.correct[info.index].audio)
+    );
+    correctResults.createContainer('audio-game__results__correct', 'result-word');
+  }
+
+  createWrongResultsList(resultsContainer: HTMLElement) {
+    this.createTitle(
+      resultsContainer,
+      'Heправильные ответы',
+      'h6',
+      'audio-game__results__wrong-name'
+    );
+
+    const wrongAnswersArray: Array<string> = [];
+    this.userAnswersCount.wrong.forEach(item => {
+      wrongAnswersArray.push(item.meaning);
+    });
+
+    const answersCount = new BaseComponent(resultsContainer, 'span', 'wrong-answer__count').node;
+    answersCount.innerText = String(wrongAnswersArray.length);
+
+    const wrongResults = new List(resultsContainer, wrongAnswersArray, info => this.onSoundButtonClick(
+      this.userAnswersCount.wrong[info.index].audio
+    ));
+    wrongResults.createContainer('audio-game__results__wrong', 'result-word');
   }
 
   async actionButton(actionButton: HTMLElement) {
-    if (actionButton.innerText === BUTTON_TEXT.skip) {
+    if (this.levelIndex === 4) {
+      this.showResults();
+    } else if (actionButton.innerText === BUTTON_TEXT.skip) {
       this.showCorrectAnswer();
     } else {
       await this.generateWordsOptions(this.difficultyLevel);
@@ -104,10 +192,9 @@ class GameWindow extends BaseComponent {
     }
   }
 
-  onSoundButtonClick() {
+  onSoundButtonClick(url: string) {
     const sound = new AudioSound();
-    console.log(this.correctWordData, this.correctWordData.audio);
-    sound.playSound(this.correctWordData.audio);
+    sound.playSound(url);
   }
 
   onVariantClick(info: IListClickInfo): void {
@@ -117,12 +204,16 @@ class GameWindow extends BaseComponent {
 
   handleUserClick(info: IListClickInfo) {
     const userAnswer = info.event.target as HTMLElement;
+    const answer = {
+      meaning: `<strong>${this.correctWordData.word}</strong> - ${this.correctWordData.wordTranslate}`,
+      audio: this.correctWordData.audio,
+    };
     if (info.label === this.correctWordData.wordTranslate) {
       userAnswer.classList.add('correct-answer');
-      this.userAnswersCount.correct += 1;
+      this.userAnswersCount.correct.push(answer);
     } else {
       userAnswer.classList.add('wrong-answer');
-      this.userAnswersCount.wrong += 1;
+      this.userAnswersCount.wrong.push(answer);
     }
   }
 
@@ -139,13 +230,17 @@ class GameWindow extends BaseComponent {
   }
 
   createAnswerImageText() {
-    const correctAnswerText = new BaseComponent(this.gameContainer.node, 'div', 'audio-game__answer-image-text').node;
+    const correctAnswerText = new BaseComponent(
+      this.gameContainer.node,
+      'div',
+      'audio-game__answer-image-text'
+    ).node;
     const audiIcon = new BaseComponent(
       correctAnswerText,
       'span',
       'audio-game__audio-icon'
     ).node;
-    audiIcon.addEventListener('click', () => this.onSoundButtonClick());
+    audiIcon.addEventListener('click', () => this.onSoundButtonClick(this.correctWordData.audio));
     const correctAnswerTranscription = new BaseComponent(
       correctAnswerText,
       'span',
@@ -154,13 +249,14 @@ class GameWindow extends BaseComponent {
     correctAnswerTranscription.innerHTML = `${this.correctWordData.word} ${this.correctWordData.transcription}`;
   }
 
-  createTitle(name: string, titleName: string, className: string) {
-    const title = new BaseComponent(
-      this.gameContainer.node,
-      titleName,
-      className
-    ).node;
-    title.innerHTML = name;
+  createTitle(
+    block: HTMLElement,
+    content: string,
+    titleName: string,
+    className: string
+  ) {
+    const title = new BaseComponent(block, titleName, className).node;
+    title.innerHTML = content;
   }
 
   createDescription(text: string) {
