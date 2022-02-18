@@ -1,9 +1,7 @@
 import List from 'pages/audio-call/components/list';
-import Button from 'pages/audio-call/components/button';
 import BaseComponent from 'common-components/base-component';
 import { DIFFICULTY_LEVELS, BUTTON_TEXT } from 'pages/audio-call/_constants';
-import { IListClickInfo, IUserAnswersCount, IWordData } from 'types/interfaces';
-import AudioSound from 'pages/audio-call/components/audio-sound';
+import { IVariantInfo, IUserAnswersCount, IWordData } from 'types/interfaces';
 import LevelData from 'pages/audio-call/components/level-data';
 
 class GameWindow extends BaseComponent {
@@ -16,6 +14,7 @@ class GameWindow extends BaseComponent {
   correctWordData: IWordData;
   userAnswersCount: IUserAnswersCount;
   difficultyLevel: number;
+  gameStarted: boolean;
 
   constructor(parentNode: HTMLElement, tagName: string, className: string) {
     super(parentNode, tagName, className);
@@ -25,166 +24,145 @@ class GameWindow extends BaseComponent {
     this.correctWordData = null;
     this.userAnswersCount = { correct: [], wrong: [] };
     this.difficultyLevel = null;
+    this.gameStarted = false;
   }
 
-  createContainer() {
-    this.gameContainer = new BaseComponent(this.node, 'div', 'audio-game');
-    this.createTitle(
-      this.gameContainer.node,
-      'Аудиовызов',
-      'h1',
-      'audio-game__name'
-    );
-    this.createDescription(
-      'Данная игра поможет улучшить ваше восприятие речи на слух'
-    );
-    this.createLevelText('Выберите уровень сложности');
-    this.levelsList = new List(
-      this.gameContainer.node,
-      DIFFICULTY_LEVELS,
-      level => this.onLevelClick(level)
-    );
-    this.levelsList.createContainer(
-      'audio-game__level-choice',
-      'audio-game__level-button'
-    );
-    const button = new Button(this.gameContainer.node);
-    const startButton: HTMLElement = button.createButton(
-      BUTTON_TEXT.start,
-      'audio-game__start'
-    );
-    startButton.addEventListener('click', () => {
-      if (this.difficultyLevel !== null) {
+  getVariantInfo(num: number): IVariantInfo {
+    const variantsArray: Array<HTMLElement> = Array.from(document.querySelectorAll('.level-option'));
+    const info : IVariantInfo = {
+      index: num,
+      target: variantsArray[num],
+      label: variantsArray[num].innerText,
+    };
+    return info;
+  }
+
+  addHotKeys() {
+    document.addEventListener('keydown', event1 => {
+      if (this.gameStarted === false) {
+        switch (event1.code) {
+          case 'Digit1': this.showSelectedLevel(0);
+            break;
+          case 'Digit2': this.showSelectedLevel(1);
+            break;
+          case 'Digit3': this.showSelectedLevel(2);
+            break;
+          case 'Digit4': this.showSelectedLevel(3);
+            break;
+          case 'Digit5': this.showSelectedLevel(4);
+            break;
+          case 'Digit6': this.showSelectedLevel(5);
+            break;
+        }
+      } else {
+        switch (event1.code) {
+          case 'Digit1': this.onVariantClick(this.getVariantInfo(0));
+            break;
+          case 'Digit2': this.onVariantClick(this.getVariantInfo(1));
+            break;
+          case 'Digit3': this.onVariantClick(this.getVariantInfo(2));
+            break;
+          case 'Digit4': this.onVariantClick(this.getVariantInfo(3));
+            break;
+          case 'Digit5': this.onVariantClick(this.getVariantInfo(4));
+            break;
+        }
+      }
+
+      if (event1.code === 'Space') {
+        this.onSoundButtonClick(this.correctWordData.audio);
+      }
+
+      const gameButton = document.querySelector('.audio-game__button') as HTMLElement;
+
+      if (event1.code === 'Enter' && this.correctWordData !== null && this.gameStarted === true) {
+        this.onActionButtonClick(gameButton);
+      }
+
+      if (event1.code === 'Enter' && this.difficultyLevel !== null && this.gameStarted === false) {
         this.onStartButtonClick();
       }
     });
   }
 
-  async onLevelClick(info: IListClickInfo) {
-    const target = info.event.target as HTMLElement;
+  createDescription(text: string) {
+    const description = new BaseComponent(this.gameContainer.node, 'p', 'audio-game__description').node;
+    description.innerHTML = text;
+  }
+
+  async onLevelClick(info: IVariantInfo) {
+    const target = info.target as HTMLElement;
+
     if (!target.closest('li')) return;
-    this.difficultyLevel = info.index;
+    this.showSelectedLevel(info.index);
+  }
+
+  showSelectedLevel(index: number) {
+    this.difficultyLevel = index;
     this.levelsList.itemsArray.splice(this.difficultyLevel, 1);
     this.levelsList.itemsArray.forEach(item => item.classList.add('invisible'));
     this.generateWordsOptions(this.difficultyLevel);
   }
 
-  async generateWordsOptions(targetNum: number) {
-    this.wordsData = await this.levelWords.getWordsData(targetNum);
-    this.correctWordData = this.wordsData[this.levelIndex];
-    const someArr = [];
-    someArr.push(this.correctWordData.wordTranslate);
-    this.answers = this.levelWords.generateAnswers(this.wordsData, someArr);
-    this.levelIndex += 1;
+  handleUserClick(info: IVariantInfo) {
+    const userAnswer = info.target as HTMLElement;
+    const answer = {
+      meaning: `<strong>${this.correctWordData.word}</strong> - ${this.correctWordData.wordTranslate}`,
+      audio: this.correctWordData.audio,
+    };
+    if (info.label === this.correctWordData.wordTranslate) {
+      userAnswer.classList.add('correct-answer');
+      this.userAnswersCount.correct.push(answer);
+    } else {
+      userAnswer.classList.add('wrong-answer');
+      this.userAnswersCount.wrong.push(answer);
+    }
   }
 
-  onStartButtonClick() {
-    this.gameContainer.destroy();
-    this.gameContainer = new BaseComponent(
-      this.node,
-      'div',
-      'audio-game__level'
-    );
-    this.createTitle(
-      this.gameContainer.node,
-      'Аудиовызов',
-      'h4',
-      'audio-game__level-name'
-    );
-    const soundButton = new Button(this.gameContainer.node);
-    soundButton
-      .createButton('', 'audio-game__sound-button')
-      .addEventListener('click', () => this.onSoundButtonClick(this.correctWordData.audio));
-    const levelOptions = new List(
-      this.gameContainer.node,
-      this.answers.sort(),
-      info => this.onVariantClick(info)
-    );
-    levelOptions.createContainer('audio-game__level-options', 'level-option');
-    const button = new Button(this.gameContainer.node);
-    const actionButton: HTMLElement = button.createButton(
-      BUTTON_TEXT.skip,
-      'audio-game__button'
-    );
-    actionButton.addEventListener('click', () => this.onActionButtonClick(actionButton));
-    setTimeout(() => this.onSoundButtonClick(this.correctWordData.audio), 500);
+  createAnswerImageText() {
+    const correctAnswerText = new BaseComponent(this.gameContainer.node, 'div', 'audio-game__answer-image-text').node;
+
+    const audiIcon = new BaseComponent(correctAnswerText, 'span', 'audio-game__audio-icon').node;
+    audiIcon.addEventListener('click', () => this.onSoundButtonClick(this.correctWordData.audio));
+
+    const correctAnswerTranscription = new BaseComponent(correctAnswerText, 'span', 'audio-game__answer-image-transcription').node;
+    correctAnswerTranscription.innerHTML = `${this.correctWordData.word} ${this.correctWordData.transcription}`;
   }
 
-  showResults() {
-    this.gameContainer.destroy();
-    this.gameContainer = new BaseComponent(
-      this.node,
-      'div',
-      'audio-game__results'
-    );
-    this.createTitle(
-      this.gameContainer.node,
-      'Аудиовызов',
-      'h4',
-      'audio-game__level-name'
-    );
-    const resultsContainer = new BaseComponent(
-      this.gameContainer.node,
-      'div',
-      'audio-game__results-container'
-    ).node;
+  showCorrectAnswer() {
+    const correctAnswerImage = new BaseComponent(this.gameContainer.node, 'div', 'audio-game__answer-image').node;
+    correctAnswerImage.style.backgroundImage = `url(https://react-learnwords-example.herokuapp.com/${this.correctWordData.image})`;
 
-    this.createTitle(
-      resultsContainer,
-      'Результаты',
-      'h5',
-      'audio-game__results-name'
-    );
+    this.createAnswerImageText();
 
-    this.createWrongResultsList(resultsContainer);
-    this.createCorrectResultsList(resultsContainer);
-
-    const playAgainButton = new Button(resultsContainer);
-    playAgainButton.createButton(BUTTON_TEXT.again, 'audio-game__button').addEventListener('click', () => this.onPlayAgainButtonClick());
-
-    const toTextBookButton = new Button(resultsContainer);
-    toTextBookButton.createButton(BUTTON_TEXT.toTextbook, 'audio-game__button');
+    const nextButton = document.querySelector('.audio-game__button');
+    nextButton.innerHTML = BUTTON_TEXT.next;
   }
 
-  onPlayAgainButtonClick() {
-    this.gameContainer.destroy();
-    this.levelIndex = 0;
-    this.correctWordData = null;
-    this.userAnswersCount = { correct: [], wrong: [] };
-    this.difficultyLevel = null;
-    this.createContainer();
+  onVariantClick(info: IVariantInfo): void {
+    this.handleUserClick(info);
+    this.showCorrectAnswer();
   }
 
-  createCorrectResultsList(resultsContainer: HTMLElement) {
-    const correctAnswersArray: Array<string> = [];
-    this.userAnswersCount.correct.forEach(item => {
-      correctAnswersArray.push(item.meaning);
+  onSkipButtonClick() {
+    const answer = {
+      meaning: `<strong>${this.correctWordData.word}</strong> - ${this.correctWordData.wordTranslate}`,
+      audio: this.correctWordData.audio,
+    };
+
+    const optionsArray = Array.from(document.querySelectorAll('.level-option'));
+    optionsArray.forEach(option => {
+      if (option.innerHTML === this.correctWordData.wordTranslate) {
+        option.classList.add('correct-answer');
+      }
     });
 
-    this.createTitle(
-      resultsContainer,
-      'Правильные ответы',
-      'h6',
-      'audio-game__results__correct-name'
-    );
-
-    const answersCount = new BaseComponent(resultsContainer, 'span', 'correct-answer__count').node;
-    answersCount.innerText = String(correctAnswersArray.length);
-    const correctResults = new List(
-      resultsContainer,
-      correctAnswersArray,
-      info => this.onSoundButtonClick(this.userAnswersCount.correct[info.index].audio)
-    );
-    correctResults.createContainer('audio-game__results__correct', 'result-word');
+    this.userAnswersCount.wrong.push(answer);
+    this.showCorrectAnswer();
   }
 
   createWrongResultsList(resultsContainer: HTMLElement) {
-    this.createTitle(
-      resultsContainer,
-      'Heправильные ответы',
-      'h6',
-      'audio-game__results__wrong-name'
-    );
+    this.createTitle(resultsContainer, 'Heправильные ответы', 'h6', 'audio-game__results__wrong-name');
 
     const wrongAnswersArray: Array<string> = [];
     this.userAnswersCount.wrong.forEach(item => {
@@ -198,6 +176,73 @@ class GameWindow extends BaseComponent {
       this.userAnswersCount.wrong[info.index].audio
     ));
     wrongResults.createContainer('audio-game__results__wrong', 'result-word');
+  }
+
+  createTitle(block: HTMLElement, content: string, titleName: string, className: string) {
+    const title = new BaseComponent(block, titleName, className).node;
+    title.innerHTML = content;
+  }
+
+  createCorrectResultsList(resultsContainer: HTMLElement) {
+    const correctAnswersArray: Array<string> = [];
+    this.userAnswersCount.correct.forEach(item => {
+      correctAnswersArray.push(item.meaning);
+    });
+
+    this.createTitle(resultsContainer, 'Правильные ответы', 'h6', 'audio-game__results__correct-name');
+
+    const answersCount = new BaseComponent(resultsContainer, 'span', 'correct-answer__count').node;
+    answersCount.innerText = String(correctAnswersArray.length);
+
+    const correctResults = new List(
+      resultsContainer,
+      correctAnswersArray,
+      info => this.onSoundButtonClick(this.userAnswersCount.correct[info.index].audio)
+    );
+    correctResults.createContainer('audio-game__results__correct', 'result-word');
+  }
+
+  onPlayAgainButtonClick() {
+    this.gameContainer.destroy();
+    this.levelIndex = 0;
+    this.correctWordData = null;
+    this.userAnswersCount = { correct: [], wrong: [] };
+    this.difficultyLevel = null;
+    this.gameStarted = false;
+    this.createContainer();
+  }
+
+  showResults() {
+    this.gameContainer.destroy();
+    this.gameContainer = new BaseComponent(this.node, 'div', 'audio-game__results');
+
+    this.createTitle(this.gameContainer.node, 'Аудиовызов', 'h4', 'audio-game__level-name');
+
+    const resultsContainer = new BaseComponent(this.gameContainer.node, 'div', 'audio-game__results-container').node;
+
+    this.createTitle(resultsContainer, 'Результаты', 'h5', 'audio-game__results-name');
+
+    this.createWrongResultsList(resultsContainer);
+    this.createCorrectResultsList(resultsContainer);
+
+    const playAgainButton = new BaseComponent(resultsContainer, 'button', 'audio-game__button', BUTTON_TEXT.again).node;
+    playAgainButton.addEventListener('click', () => this.onPlayAgainButtonClick());
+
+    const textBookButton = new BaseComponent(resultsContainer, 'button', 'audio-game__button', BUTTON_TEXT.toTextbook).node;
+    textBookButton.addEventListener('click', () => {
+      window.location.href = '#textbook';
+    });
+  }
+
+  async generateWordsOptions(targetNum: number) {
+    this.wordsData = await this.levelWords.getWordsData(targetNum);
+    this.correctWordData = this.wordsData[this.levelIndex];
+
+    const wordsArray = [];
+    wordsArray.push(this.correctWordData.wordTranslate);
+    this.answers = this.levelWords.generateAnswers(this.wordsData, wordsArray);
+
+    this.levelIndex += 1;
   }
 
   async onActionButtonClick(actionButton: HTMLElement) {
@@ -214,104 +259,50 @@ class GameWindow extends BaseComponent {
     }
   }
 
-  onSkipButtonClick() {
-    const answer = {
-      meaning: `<strong>${this.correctWordData.word}</strong> - ${this.correctWordData.wordTranslate}`,
-      audio: this.correctWordData.audio,
-    };
-    const optionsArray = Array.from(document.querySelectorAll('.level-option'));
-    optionsArray.forEach(option => {
-      if (option.innerHTML === this.correctWordData.wordTranslate) {
-        option.classList.add('correct-answer');
-      }
-    });
-    this.userAnswersCount.wrong.push(answer);
-    this.showCorrectAnswer();
-  }
-
   onSoundButtonClick(url: string) {
-    const sound = new AudioSound();
-    sound.playSound(url);
+    const audioObject = new Audio(`https://react-learnwords-example.herokuapp.com/${url}`);
+    audioObject.play();
   }
 
-  onVariantClick(info: IListClickInfo): void {
-    this.handleUserClick(info);
-    this.showCorrectAnswer();
+  onStartButtonClick() {
+    this.gameContainer.destroy();
+    this.gameContainer = new BaseComponent(this.node, 'div', 'audio-game__level');
+
+    this.createTitle(this.gameContainer.node, 'Аудиовызов', 'h4', 'audio-game__level-name');
+
+    const soundButton = new BaseComponent(this.gameContainer.node, 'button', 'audio-game__sound-button').node;
+    soundButton.addEventListener('click', () => this.onSoundButtonClick(this.correctWordData.audio));
+
+    const levelOptions = new List(this.gameContainer.node, this.answers.sort(), info => this.onVariantClick(info));
+    levelOptions.createContainer('audio-game__level-options', 'level-option');
+
+    const actionButton = new BaseComponent(this.gameContainer.node, 'button', 'audio-game__button', BUTTON_TEXT.skip).node;
+    actionButton.addEventListener('click', () => this.onActionButtonClick(actionButton));
+
+    this.gameStarted = true;
+
+    setTimeout(() => this.onSoundButtonClick(this.correctWordData.audio), 100);
   }
 
-  handleUserClick(info: IListClickInfo) {
-    const userAnswer = info.event.target as HTMLElement;
-    const answer = {
-      meaning: `<strong>${this.correctWordData.word}</strong> - ${this.correctWordData.wordTranslate}`,
-      audio: this.correctWordData.audio,
-    };
-    if (info.label === this.correctWordData.wordTranslate) {
-      userAnswer.classList.add('correct-answer');
-      this.userAnswersCount.correct.push(answer);
-    } else {
-      userAnswer.classList.add('wrong-answer');
-      this.userAnswersCount.wrong.push(answer);
-    }
-  }
+  createContainer() {
+    this.gameContainer = new BaseComponent(this.node, 'div', 'audio-game');
 
-  showCorrectAnswer() {
-    const correctAnswerImage = new BaseComponent(
-      this.gameContainer.node,
-      'div',
-      'audio-game__answer-image'
-    ).node;
-    correctAnswerImage.style.backgroundImage = `url(https://react-learnwords-example.herokuapp.com/${this.correctWordData.image})`;
-    this.createAnswerImageText();
-    const nextButton = document.querySelector('.audio-game__button');
-    nextButton.innerHTML = BUTTON_TEXT.next;
-  }
+    this.addHotKeys();
 
-  createAnswerImageText() {
-    const correctAnswerText = new BaseComponent(
-      this.gameContainer.node,
-      'div',
-      'audio-game__answer-image-text'
-    ).node;
-    const audiIcon = new BaseComponent(
-      correctAnswerText,
-      'span',
-      'audio-game__audio-icon'
-    ).node;
-    audiIcon.addEventListener('click', () => this.onSoundButtonClick(this.correctWordData.audio));
-    const correctAnswerTranscription = new BaseComponent(
-      correctAnswerText,
-      'span',
-      'audio-game__answer-image-transcription'
-    ).node;
-    correctAnswerTranscription.innerHTML = `${this.correctWordData.word} ${this.correctWordData.transcription}`;
-  }
+    this.createTitle(this.gameContainer.node, 'Аудиовызов', 'h1', 'audio-game__name');
+    this.createDescription('Данная игра поможет улучшить ваше восприятие речи на слух');
 
-  createTitle(
-    block: HTMLElement,
-    content: string,
-    titleName: string,
-    className: string
-  ) {
-    const title = new BaseComponent(block, titleName, className).node;
-    title.innerHTML = content;
-  }
+    const levelText = new BaseComponent(this.gameContainer.node, 'span', 'audio-game__choice').node;
+    levelText.innerHTML = 'Выберите уровень сложности';
 
-  createDescription(text: string) {
-    const description = new BaseComponent(
-      this.gameContainer.node,
-      'p',
-      'audio-game__description'
-    ).node;
-    description.innerHTML = text;
-  }
+    this.levelsList = new List(this.gameContainer.node, DIFFICULTY_LEVELS, level => this.onLevelClick(level));
+    this.levelsList.createContainer('audio-game__level-choice', 'audio-game__level-button');
 
-  createLevelText(text: string) {
-    const levelText = new BaseComponent(
-      this.gameContainer.node,
-      'span',
-      'audio-game__choice'
-    ).node;
-    levelText.innerHTML = text;
+    const startButton = new BaseComponent(this.gameContainer.node, 'button', 'audio-game__start', BUTTON_TEXT.start).node;
+    startButton.addEventListener('click', () => {
+      if (this.difficultyLevel === null) return;
+      this.onStartButtonClick();
+    });
   }
 }
 

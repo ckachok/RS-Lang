@@ -50,6 +50,11 @@ $whiteText: rgba(255, 255, 255, 1);
       box-shadow: 0px -4px 40px 0px $blueBorder, 0px 4px 40px 0px $blueBorder,
         -4px 0px 10px 0px $blueBorder, 4px 0px 10px 0px $blueBorder;
     }
+
+    &:active {
+      box-shadow: 0px -4px 40px 0px $blueBorder, 0px 4px 40px 0px $blueBorder,
+        -4px 0px 10px 0px $blueBorder, 4px 0px 10px 0px $blueBorder;
+    }
   }
 
   &-choice {

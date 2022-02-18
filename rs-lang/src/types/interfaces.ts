@@ -95,10 +95,10 @@ export interface IDeveloperData {
   contribution: string;
 }
 
-export interface IListClickInfo {
+export interface IVariantInfo {
   index: number;
   label: string;
-  event: MouseEvent;
+  target: HTMLElement;
 }
 
 export interface IWordData {
