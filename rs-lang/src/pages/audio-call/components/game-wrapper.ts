@@ -53,7 +53,11 @@ class GameWindow extends BaseComponent {
       BUTTON_TEXT.start,
       'audio-game__start'
     );
-    startButton.addEventListener('click', () => this.onStartButtonClick());
+    startButton.addEventListener('click', () => {
+      if (this.difficultyLevel !== null) {
+        this.onStartButtonClick();
+      }
+    });
   }
 
   async onLevelClick(info: IListClickInfo) {
@@ -102,7 +106,7 @@ class GameWindow extends BaseComponent {
       BUTTON_TEXT.skip,
       'audio-game__button'
     );
-    actionButton.addEventListener('click', () => this.actionButton(actionButton));
+    actionButton.addEventListener('click', () => this.onActionButtonClick(actionButton));
     setTimeout(() => this.onSoundButtonClick(this.correctWordData.audio), 500);
   }
 
@@ -134,6 +138,21 @@ class GameWindow extends BaseComponent {
 
     this.createWrongResultsList(resultsContainer);
     this.createCorrectResultsList(resultsContainer);
+
+    const playAgainButton = new Button(resultsContainer);
+    playAgainButton.createButton(BUTTON_TEXT.again, 'audio-game__button').addEventListener('click', () => this.onPlayAgainButtonClick());
+
+    const toTextBookButton = new Button(resultsContainer);
+    toTextBookButton.createButton(BUTTON_TEXT.toTextbook, 'audio-game__button');
+  }
+
+  onPlayAgainButtonClick() {
+    this.gameContainer.destroy();
+    this.levelIndex = 0;
+    this.correctWordData = null;
+    this.userAnswersCount = { correct: [], wrong: [] };
+    this.difficultyLevel = null;
+    this.createContainer();
   }
 
   createCorrectResultsList(resultsContainer: HTMLElement) {
@@ -181,15 +200,33 @@ class GameWindow extends BaseComponent {
     wrongResults.createContainer('audio-game__results__wrong', 'result-word');
   }
 
-  async actionButton(actionButton: HTMLElement) {
-    if (this.levelIndex === 4) {
-      this.showResults();
-    } else if (actionButton.innerText === BUTTON_TEXT.skip) {
-      this.showCorrectAnswer();
+  async onActionButtonClick(actionButton: HTMLElement) {
+    if (actionButton.innerHTML === BUTTON_TEXT.skip) {
+      this.onSkipButtonClick();
     } else {
-      await this.generateWordsOptions(this.difficultyLevel);
-      this.onStartButtonClick();
+      // eslint-disable-next-line no-lonely-if
+      if (this.levelIndex === 3) {
+        this.showResults();
+      } else {
+        await this.generateWordsOptions(this.difficultyLevel);
+        this.onStartButtonClick();
+      }
     }
+  }
+
+  onSkipButtonClick() {
+    const answer = {
+      meaning: `<strong>${this.correctWordData.word}</strong> - ${this.correctWordData.wordTranslate}`,
+      audio: this.correctWordData.audio,
+    };
+    const optionsArray = Array.from(document.querySelectorAll('.level-option'));
+    optionsArray.forEach(option => {
+      if (option.innerHTML === this.correctWordData.wordTranslate) {
+        option.classList.add('correct-answer');
+      }
+    });
+    this.userAnswersCount.wrong.push(answer);
+    this.showCorrectAnswer();
   }
 
   onSoundButtonClick(url: string) {

@@ -1,4 +1,3 @@
-import LevelData from 'pages/audio-call/components/level-data';
 import BaseComponent from 'common-components/base-component';
 import { IListClickInfo } from 'types/interfaces';
 
