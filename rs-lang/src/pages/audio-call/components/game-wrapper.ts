@@ -79,8 +79,7 @@ class GameWindow extends BaseComponent {
     this.createTitle('Аудиовызов', 'h4', 'audio-game__level-name');
     const soundButton = new Button(this.gameContainer.node);
     soundButton
-      .createButton('', 'audio-game__sound-button');
-    // .addEventListener('click', () => this.onSoundButtonClick());
+      .createButton('', 'audio-game__sound-button').addEventListener('click', () => this.onSoundButtonClick());
     const levelOptions = new List(
       this.gameContainer.node,
       this.answers.sort(),
@@ -93,7 +92,7 @@ class GameWindow extends BaseComponent {
       'audio-game__button'
     );
     actionButton.addEventListener('click', () => this.actionButton(actionButton));
-    // setTimeout(() => this.onSoundButtonClick(), 500);
+    setTimeout(() => this.onSoundButtonClick(), 500);
   }
 
   async actionButton(actionButton: HTMLElement) {
@@ -107,6 +106,7 @@ class GameWindow extends BaseComponent {
 
   onSoundButtonClick() {
     const sound = new AudioSound();
+    console.log(this.correctWordData, this.correctWordData.audio);
     sound.playSound(this.correctWordData.audio);
   }
 
@@ -132,14 +132,26 @@ class GameWindow extends BaseComponent {
       'div',
       'audio-game__answer-image'
     ).node;
-    const correctAnswerTranscription = new BaseComponent(
-      this.gameContainer.node,
-      'span',
-      'audio-game__answer-image-name'
-    ).node;
-    correctAnswerTranscription.innerHTML = `${this.correctWordData.word} ${this.correctWordData.transcription}`;
+    correctAnswerImage.style.backgroundImage = `url(https://react-learnwords-example.herokuapp.com/${this.correctWordData.image})`;
+    this.createAnswerImageText();
     const nextButton = document.querySelector('.audio-game__button');
     nextButton.innerHTML = BUTTON_TEXT.next;
+  }
+
+  createAnswerImageText() {
+    const correctAnswerText = new BaseComponent(this.gameContainer.node, 'div', 'audio-game__answer-image-text').node;
+    const audiIcon = new BaseComponent(
+      correctAnswerText,
+      'span',
+      'audio-game__audio-icon'
+    ).node;
+    audiIcon.addEventListener('click', () => this.onSoundButtonClick());
+    const correctAnswerTranscription = new BaseComponent(
+      correctAnswerText,
+      'span',
+      'audio-game__answer-image-transcription'
+    ).node;
+    correctAnswerTranscription.innerHTML = `${this.correctWordData.word} ${this.correctWordData.transcription}`;
   }
 
   createTitle(name: string, titleName: string, className: string) {

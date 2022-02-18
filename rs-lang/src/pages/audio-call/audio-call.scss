@@ -147,32 +147,29 @@ $whiteText: rgba(255, 255, 255, 1);
 }
 
 .audio-game__answer-image {
-  // display: flex;
-  // max-width: 390px;
-  // max-height: 260px;
   width: 390px;
   height: 250px;
   position: absolute;
   border-radius: 154px;
-  top: 100px;
-  background-image: url(../../assets/test.jpg);
+  top: 12%;
 
-  &-name {
+  &-text {
+    position: absolute;
+    top: 44%;
+  }
+
+  &-transcription {
     color: $whiteText;
     font-size: 2.5em;
-    position: absolute;
-    top: 380px;
-    text-align: center;
-
-    &::before {
-      content: url(../../assets/svg/audio-call/audio-small.svg);
-      width: 50px;
-      height: 50px;
-	  margin-right: 10px;
-      display: inline-block;
-      vertical-align: middle;
-    }
+    vertical-align: top;
+    margin-left: 17px;
   }
+}
+
+.audio-game__audio-icon {
+  content: url(../../assets/svg/audio-call/audio-small.svg);
+  width: 50px;
+  height: 50px;
 }
 
 .audio-game__results-name {
