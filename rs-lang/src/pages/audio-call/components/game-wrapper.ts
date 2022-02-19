@@ -19,6 +19,7 @@ class GameWindow extends BaseComponent {
   constructor(parentNode: HTMLElement, tagName: string, className: string) {
     super(parentNode, tagName, className);
     this.levelWords = new LevelData();
+    this.addHotKeys();
     this.createContainer();
     this.levelIndex = 0;
     this.correctWordData = null;
@@ -119,7 +120,7 @@ class GameWindow extends BaseComponent {
     }
   }
 
-  createAnswerImageText() {
+  createAnswerImageText(correctAnswerImage: HTMLElement) {
     const correctAnswerText = new BaseComponent(this.gameContainer.node, 'div', 'audio-game__answer-image-text').node;
 
     const audiIcon = new BaseComponent(correctAnswerText, 'span', 'audio-game__audio-icon').node;
@@ -127,13 +128,18 @@ class GameWindow extends BaseComponent {
 
     const correctAnswerTranscription = new BaseComponent(correctAnswerText, 'span', 'audio-game__answer-image-transcription').node;
     correctAnswerTranscription.innerHTML = `${this.correctWordData.word} ${this.correctWordData.transcription}`;
+
+    correctAnswerImage.after(correctAnswerText);
   }
 
   showCorrectAnswer() {
+    const audioButton = document.querySelector('.audio-game__sound-button');
     const correctAnswerImage = new BaseComponent(this.gameContainer.node, 'div', 'audio-game__answer-image').node;
     correctAnswerImage.style.backgroundImage = `url(https://react-learnwords-example.herokuapp.com/${this.correctWordData.image})`;
 
-    this.createAnswerImageText();
+    audioButton.replaceWith(correctAnswerImage);
+
+    this.createAnswerImageText(correctAnswerImage);
 
     const nextButton = document.querySelector('.audio-game__button');
     nextButton.innerHTML = BUTTON_TEXT.next;
@@ -250,7 +256,7 @@ class GameWindow extends BaseComponent {
       this.onSkipButtonClick();
     } else {
       // eslint-disable-next-line no-lonely-if
-      if (this.levelIndex === 3) {
+      if (this.levelIndex === 20) {
         this.showResults();
       } else {
         await this.generateWordsOptions(this.difficultyLevel);
@@ -286,8 +292,6 @@ class GameWindow extends BaseComponent {
 
   createContainer() {
     this.gameContainer = new BaseComponent(this.node, 'div', 'audio-game');
-
-    this.addHotKeys();
 
     this.createTitle(this.gameContainer.node, 'Аудиовызов', 'h1', 'audio-game__name');
     this.createDescription('Данная игра поможет улучшить ваше восприятие речи на слух');

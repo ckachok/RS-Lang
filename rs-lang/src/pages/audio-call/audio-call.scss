@@ -1,10 +1,5 @@
 @import '../../variables.scss';
 
-$blueBorder: #0274d9;
-$greyBorder: #5f5555;
-$blackText: #000000;
-$whiteText: rgba(255, 255, 255, 1);
-
 .audio-game,
 .audio-game__level,
 .audio-game__results {
@@ -59,9 +54,11 @@ $whiteText: rgba(255, 255, 255, 1);
 
   &-choice {
     display: flex;
+    flex-wrap: wrap;
     width: 50%;
     justify-content: space-around;
     margin-top: 20px;
+    gap: 20px;
   }
 
   &-name {
@@ -71,6 +68,8 @@ $whiteText: rgba(255, 255, 255, 1);
   &-options {
     display: flex;
     justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 20px;
     width: 100%;
   }
 }
@@ -89,7 +88,6 @@ $whiteText: rgba(255, 255, 255, 1);
 
 .audio-game__name {
   font-size: 96px;
-  text-align: center;
 }
 
 .audio-game__description {
@@ -163,14 +161,7 @@ $whiteText: rgba(255, 255, 255, 1);
 .audio-game__answer-image {
   width: 390px;
   height: 250px;
-  position: absolute;
   border-radius: 154px;
-  top: 12%;
-
-  &-text {
-    position: absolute;
-    top: 44%;
-  }
 
   &-transcription {
     color: $whiteText;
@@ -181,6 +172,7 @@ $whiteText: rgba(255, 255, 255, 1);
 }
 
 .audio-game__audio-icon {
+  cursor: pointer;
   content: url(../../assets/svg/audio-call/audio-small.svg);
   width: 50px;
   height: 50px;
@@ -256,4 +248,16 @@ $whiteText: rgba(255, 255, 255, 1);
 
 .invisible {
   display: none;
+}
+
+@media (max-width: 1500px) {
+  .audio-game__name {
+      font-size: 76px;
+  }
+}
+
+@media (max-width: 800px) {
+  .audio-game__results-container {
+    width: 80%;
+}
 }
