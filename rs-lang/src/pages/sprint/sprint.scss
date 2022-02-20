@@ -1,1 +1,264 @@
 @import "../../variables.scss";
+
+@import '../../variables.scss';
+
+.sprint-game,
+.sprint-game__level,
+.sprint-game__results {
+  height: 70vh;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+
+  &__correct-name,
+  &__wrong-name {
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 500;
+    text-align: left;
+    margin: 30px 0 20px 0;
+    color: $greyBorder;
+  }
+}
+
+.round-word {
+    font-size: 64px;
+    font-weight: 500;
+}
+
+.round-word-translation {
+    font-size: 48px;
+    font-weight: 500;
+}
+
+.sprint-game__results__wrong,
+.sprint-game__results__correct {
+  gap: 23px;
+  display: grid;
+}
+
+.sprint-game__level {
+  width: 86%;
+
+  &-button {
+    height: 65px;
+    width: 65px;
+    font-size: 24px;
+    color: rgba(95, 85, 85, 1);
+    background-color: $whiteText;
+    border-radius: 50%;
+    border: 2px solid $blueBorder;
+    text-align: center;
+    padding-top: 14px;
+
+    &:hover {
+      box-shadow: 0px -4px 40px 0px $blueBorder, 0px 4px 40px 0px $blueBorder,
+        -4px 0px 10px 0px $blueBorder, 4px 0px 10px 0px $blueBorder;
+    }
+
+    &:active {
+      box-shadow: 0px -4px 40px 0px $blueBorder, 0px 4px 40px 0px $blueBorder,
+        -4px 0px 10px 0px $blueBorder, 4px 0px 10px 0px $blueBorder;
+    }
+  }
+
+  &-choice {
+    display: flex;
+    flex-wrap: wrap;
+    width: 50%;
+    justify-content: space-around;
+    margin-top: 20px;
+    gap: 20px;
+  }
+
+  &-name {
+    font-size: 48px;
+  }
+
+  &-options {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 20px;
+    width: 100%;
+  }
+}
+
+.sprint-game__name,
+.sprint-game__description,
+.sprint-game__choice,
+.sprint-game__start,
+.sprint-game__level-name,
+.sprint-game__answer-image-name,
+.round-word,
+.round-word-translation {
+  color: $whiteText;
+  text-shadow: 2px 0 0 $greyBorder, -2px 0 0 $greyBorder, 0 2px 0 $greyBorder,
+    0 -2px 0 $greyBorder, 1px 1px $greyBorder, -1px -1px 0 $greyBorder,
+    1px -1px 0 $greyBorder, -1px 1px 0 $greyBorder;
+}
+
+.sprint-game__name {
+  font-size: 96px;
+}
+
+.sprint-game__description {
+  font-size: 36px;
+  font-style: normal;
+  font-weight: 500;
+  letter-spacing: 0em;
+  text-align: center;
+  margin: 50px 0;
+}
+
+.sprint-game__choice {
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 500;
+  letter-spacing: 0em;
+}
+
+.sprint-game__start {
+  height: 60px;
+  margin-top: 40px;
+  width: 250px;
+  border-radius: 10px;
+  background-color: rgba(2, 116, 217, 0.7);
+  color: $whiteText;
+  text-transform: uppercase;
+  font-size: 24px;
+}
+
+.level-option {
+  color: rgba(2, 116, 217, 1);
+  font-size: 32px;
+}
+
+.level-option:hover,
+.sprint-game__button:hover {
+  background-color: rgba(2, 116, 217, 0.7);
+  color: $whiteText;
+}
+
+.level-option,
+.sprint-game__button {
+  cursor: pointer;
+  background-color: rgba(255, 255, 255, 0.7);
+  border: 3px solid $greyBorder;
+  border-radius: 35px;
+  padding: 13px 40px;
+}
+
+.sprint-game__button {
+  text-transform: uppercase;
+  color: $greyBorder;
+  font-size: 24px;
+  display: block;
+  margin-top: 30px;
+}
+
+.sprint-game__answer-image {
+  width: 390px;
+  height: 250px;
+  border-radius: 154px;
+
+  &-transcription {
+    color: $whiteText;
+    font-size: 2.5em;
+    vertical-align: top;
+    margin-left: 17px;
+  }
+}
+
+// .sprint-game__sprint-icon {
+//   cursor: pointer;
+//   content: url(../../assets/svg/sprint-call/sprint-small.svg);
+//   width: 50px;
+//   height: 50px;
+// }
+
+.sprint-game__results-name {
+  font-size: 36px;
+  font-style: normal;
+  font-weight: 500;
+  letter-spacing: 0em;
+  text-align: center;
+  text-transform: uppercase;
+  color: $greyBorder;
+}
+
+.sprint-game__results-container {
+  width: 40%;
+  height: calc(80vh - 200px);
+  overflow: scroll;
+  margin-top: 40px;
+}
+
+.result-word {
+  font-size: 24px;
+  font-weight: 500;
+  color: $greyBorder;
+
+//   &::before {
+//     cursor: pointer;
+//     content: url(../../assets/svg/sprint-call/sprint-small.svg);
+//     width: 31px;
+//     height: 31px;
+//     vertical-align: middle;
+//     margin-right: 20px;
+
+//     &:hover {
+//       color: red;
+//     }
+//   }
+}
+
+.correct-answer__count,
+.wrong-answer__count {
+  display: inline-block;
+  padding: 2px 10px;
+  margin-left: 10px;
+  border-radius: 30px;
+  color: $whiteText;
+}
+
+.correct-answer {
+  background-color: rgba(14, 183, 14, 0.7);
+  color: $whiteText;
+
+  &__count {
+    background-color: rgba(14, 183, 14, 1);
+  }
+}
+
+.wrong-answer {
+  background-color: rgba(255, 0, 0, 0.7);
+  color: $whiteText;
+
+  &__count {
+    background-color: rgba(255, 0, 0, 1);
+  }
+}
+
+.sprint-game__results__correct-name,
+.sprint-game__results__wrong-name {
+  display: inline-block;
+}
+
+.invisible {
+  display: none;
+}
+
+@media (max-width: 1500px) {
+  .sprint-game__name {
+      font-size: 76px;
+  }
+}
+
+@media (max-width: 800px) {
+  .sprint-game__results-container {
+    width: 80%;
+}
+}
