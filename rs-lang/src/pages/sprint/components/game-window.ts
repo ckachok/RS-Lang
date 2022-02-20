@@ -101,7 +101,7 @@ class GameWindow extends BaseComponent {
       meaning: `<strong>${this.correctWordData.word}</strong> - ${this.correctWordData.wordTranslate}`,
       audio: this.correctWordData.audio,
     };
-    if ((userAnswer === 'верно' && this.correctWordData.word === translation) || (userAnswer === 'неверно' && this.correctWordData.word !== translation)) {
+    if ((userAnswer === 'верно' && this.correctWordData.wordTranslate === translation) || (userAnswer === 'неверно' && this.correctWordData.wordTranslate !== translation)) {
       this.userAnswersCount.correct.push(answer);
     } else {
       this.userAnswersCount.wrong.push(answer);
@@ -173,10 +173,12 @@ class GameWindow extends BaseComponent {
     this.createWrongResultsList(resultsContainer);
     this.createCorrectResultsList(resultsContainer);
 
-    const playAgainButton = new BaseComponent(resultsContainer, 'button', 'sprint-game__button', BUTTON_TEXT.again).node;
+    const buttonsContainer = new BaseComponent(this.gameContainer.node, 'div', 'buttons-container').node;
+
+    const playAgainButton = new BaseComponent(buttonsContainer, 'button', 'sprint-game__button', BUTTON_TEXT.again).node;
     playAgainButton.addEventListener('click', () => this.onPlayAgainButtonClick());
 
-    const textBookButton = new BaseComponent(resultsContainer, 'button', 'sprint-game__button', BUTTON_TEXT.toTextbook).node;
+    const textBookButton = new BaseComponent(buttonsContainer, 'button', 'sprint-game__button', BUTTON_TEXT.toTextbook).node;
     textBookButton.addEventListener('click', () => {
       window.location.href = '#textbook';
     });

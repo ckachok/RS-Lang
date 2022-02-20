@@ -19,7 +19,7 @@
     font-weight: 500;
     text-align: left;
     margin: 30px 0 20px 0;
-    color: $greyBorder;
+    color: $greyColor;
   }
 }
 
@@ -46,7 +46,7 @@
     height: 65px;
     width: 65px;
     font-size: 24px;
-    color: rgba(95, 85, 85, 1);
+    color: $greyColor;
     background-color: $whiteText;
     border-radius: 50%;
     border: 2px solid $blueBorder;
@@ -95,9 +95,9 @@
 .round-word,
 .round-word-translation {
   color: $whiteText;
-  text-shadow: 2px 0 0 $greyBorder, -2px 0 0 $greyBorder, 0 2px 0 $greyBorder,
-    0 -2px 0 $greyBorder, 1px 1px $greyBorder, -1px -1px 0 $greyBorder,
-    1px -1px 0 $greyBorder, -1px 1px 0 $greyBorder;
+  text-shadow: 2px 0 0 $greyColor, -2px 0 0 $greyColor, 0 2px 0 $greyColor,
+    0 -2px 0 $greyColor, 1px 1px $greyColor, -1px -1px 0 $greyColor,
+    1px -1px 0 $greyColor, -1px 1px 0 $greyColor;
 }
 
 .sprint-game__name {
@@ -138,13 +138,15 @@
 
 .sprint-game__button {
   cursor: pointer;
-  border: 3px solid $greyBorder;
+  border: 3px solid $greyColor;
   border-radius: 35px;
   padding: 13px 40px;
 }
 
 .sprint-game__button {
-  width: 200px;
+  min-width: 200px;
+  color: $greyColor;
+  background: linear-gradient(0deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.7));
   text-transform: uppercase;
   font-size: 24px;
 }
@@ -169,13 +171,6 @@
   }
 }
 
-// .sprint-game__sprint-icon {
-//   cursor: pointer;
-//   content: url(../../assets/svg/sprint-call/sprint-small.svg);
-//   width: 50px;
-//   height: 50px;
-// }
-
 .sprint-game__results-name {
   font-size: 36px;
   font-style: normal;
@@ -183,7 +178,7 @@
   letter-spacing: 0em;
   text-align: center;
   text-transform: uppercase;
-  color: $greyBorder;
+  color: $greyColor;
 }
 
 .sprint-game__results-container {
@@ -196,20 +191,16 @@
 .result-word {
   font-size: 24px;
   font-weight: 500;
-  color: $greyBorder;
+  color: $greyColor;
 
-//   &::before {
-//     cursor: pointer;
-//     content: url(../../assets/svg/sprint-call/sprint-small.svg);
-//     width: 31px;
-//     height: 31px;
-//     vertical-align: middle;
-//     margin-right: 20px;
-
-//     &:hover {
-//       color: red;
-//     }
-//   }
+  &::before {
+    cursor: pointer;
+    content: url(../../assets/svg/sprint/audio-small.svg);
+    width: 31px;
+    height: 31px;
+    vertical-align: middle;
+    margin-right: 20px;
+  }
 }
 
 .correct-answer__count,
