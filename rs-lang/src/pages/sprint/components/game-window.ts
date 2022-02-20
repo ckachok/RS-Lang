@@ -1,3 +1,4 @@
+/* eslint-disable no-lonely-if */
 /* eslint-disable max-len */
 import Data from 'services/api-sprint';
 import List from './list';
@@ -15,6 +16,9 @@ class GameWindow extends BaseComponent {
   userAnswersCount: IUserAnswersCount;
   difficultyLevel: number;
   gameStarted: boolean;
+  points: number;
+  score: number;
+  correctSequence: number;
 
   constructor(parentNode: HTMLElement, tagName: string, className: string) {
     super(parentNode, tagName, className);
@@ -24,6 +28,9 @@ class GameWindow extends BaseComponent {
     this.userAnswersCount = { correct: [], wrong: [] };
     this.difficultyLevel = null;
     this.gameStarted = false;
+    this.points = 10;
+    this.score = 0;
+    this.correctSequence = 0;
   }
 
   createTextLine(block: HTMLElement, content: string, titleName: string, className: string) {
@@ -102,11 +109,36 @@ class GameWindow extends BaseComponent {
       audio: this.correctWordData.audio,
     };
     if ((userAnswer === 'верно' && this.correctWordData.wordTranslate === translation) || (userAnswer === 'неверно' && this.correctWordData.wordTranslate !== translation)) {
+      this.updateScore();
       this.userAnswersCount.correct.push(answer);
     } else {
       this.userAnswersCount.wrong.push(answer);
+      this.correctSequence = 0;
     }
     this.onActionButtonClick();
+  }
+
+  updateScore() {
+    if (this.correctSequence === 3) {
+      this.points *= 2;
+      this.correctSequence = 0;
+    }
+    this.score += this.points;
+    this.correctSequence += 1;
+  }
+
+  colorCircles() {
+    const paginationCircles = Array.from(document.querySelectorAll('.pagination-circle'));
+
+    if (!paginationCircles[0].classList.contains('correct-answer') && this.correctSequence > 0) {
+      paginationCircles[0].classList.add('correct-answer');
+      if (!paginationCircles[1].classList.contains('correct-answer') && this.correctSequence > 1) {
+        paginationCircles[1].classList.add('correct-answer');
+        if (!paginationCircles[2].classList.contains('correct-answer') && this.correctSequence > 2) {
+          paginationCircles[2].classList.add('correct-answer');
+        }
+      }
+    }
   }
 
   createWrongResultsList(resultsContainer: HTMLElement) {
@@ -157,6 +189,9 @@ class GameWindow extends BaseComponent {
     this.userAnswersCount = { correct: [], wrong: [] };
     this.difficultyLevel = null;
     this.gameStarted = false;
+    this.points = 10;
+    this.score = 0;
+    this.correctSequence = 0;
     this.createContainer();
   }
 
@@ -173,7 +208,7 @@ class GameWindow extends BaseComponent {
     this.createWrongResultsList(resultsContainer);
     this.createCorrectResultsList(resultsContainer);
 
-    const buttonsContainer = new BaseComponent(this.gameContainer.node, 'div', 'buttons-container').node;
+    const buttonsContainer = new BaseComponent(resultsContainer, 'div', 'buttons-container').node;
 
     const playAgainButton = new BaseComponent(buttonsContainer, 'button', 'sprint-game__button', BUTTON_TEXT.again).node;
     playAgainButton.addEventListener('click', () => this.onPlayAgainButtonClick());
@@ -185,7 +220,7 @@ class GameWindow extends BaseComponent {
   }
 
   async onActionButtonClick() {
-    if (this.levelIndex === 2) {
+    if (this.levelIndex === 8) {
       this.showResults();
     } else {
       await this.generateWordsOptions(this.difficultyLevel);
@@ -201,6 +236,8 @@ class GameWindow extends BaseComponent {
 
     this.createTextLine(this.gameContainer.node, 'Спринт', 'h4', 'sprint-game__level-name');
 
+    this.createScoreContainer();
+
     this.createTextLine(this.gameContainer.node, this.correctWordData.word, 'span', 'round-word');
     this.createTextLine(this.gameContainer.node, randomTranslation, 'span', 'round-word-translation');
 
@@ -213,6 +250,21 @@ class GameWindow extends BaseComponent {
     correctButton.addEventListener('click', () => this.handleUserClick(randomTranslation, correctButton.innerHTML));
 
     this.gameStarted = true;
+  }
+
+  createScoreContainer() {
+    const scoreContainer = new BaseComponent(this.gameContainer.node, 'div', 'score-container').node;
+
+    this.createTextLine(scoreContainer, String(this.score), 'span', 'score-amount');
+
+    const pagination = new BaseComponent(scoreContainer, 'div', 'pagination').node;
+    this.createTextLine(pagination, '', 'span', 'pagination-circle');
+    this.createTextLine(pagination, '', 'span', 'pagination-circle');
+    this.createTextLine(pagination, '', 'span', 'pagination-circle');
+
+    this.colorCircles();
+
+    this.createTextLine(scoreContainer, `+${this.points} очков за слово`, 'span', 'points-amount');
   }
 
   createContainer() {
