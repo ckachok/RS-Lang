@@ -19,6 +19,7 @@ class GameWindow extends BaseComponent {
   points: number;
   score: number;
   correctSequence: number;
+  timer: number;
 
   constructor(parentNode: HTMLElement, tagName: string, className: string) {
     super(parentNode, tagName, className);
@@ -31,6 +32,7 @@ class GameWindow extends BaseComponent {
     this.points = 10;
     this.score = 0;
     this.correctSequence = 0;
+    this.timer = 6;
   }
 
   createTextLine(block: HTMLElement, content: string, titleName: string, className: string) {
@@ -237,6 +239,7 @@ class GameWindow extends BaseComponent {
     this.createTextLine(this.gameContainer.node, 'Спринт', 'h4', 'sprint-game__level-name');
 
     this.createScoreContainer();
+    this.createTimer();
 
     this.createTextLine(this.gameContainer.node, this.correctWordData.word, 'span', 'round-word');
     this.createTextLine(this.gameContainer.node, randomTranslation, 'span', 'round-word-translation');
@@ -250,6 +253,18 @@ class GameWindow extends BaseComponent {
     correctButton.addEventListener('click', () => this.handleUserClick(randomTranslation, correctButton.innerHTML));
 
     this.gameStarted = true;
+  }
+
+  createTimer() {
+    const timerContainer = new BaseComponent(this.gameContainer.node, 'div', 'timer-container').node;
+    const timerCount = new BaseComponent(timerContainer, 'span', 'timer-count').node;
+    const gameTimer = setInterval(() => {
+      timerCount.innerHTML = String(this.timer -= 1);
+      if (this.timer === 0) {
+        this.showResults();
+        clearInterval(gameTimer);
+      }
+    }, 1000);
   }
 
   createScoreContainer() {

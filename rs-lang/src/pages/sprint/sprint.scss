@@ -41,6 +41,7 @@
 
 .sprint-game__level {
   width: 86%;
+  position: relative;
 
   &-button {
     height: 65px;
@@ -164,6 +165,26 @@
   justify-content: center;
 }
 
+.timer-container {
+  position: absolute;
+  right: 20%;
+  top: 23%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+  background: rgba(255, 255, 255, 0.7);
+  border: 3px solid #5f5555;
+  width: 100px;
+  border-radius: 50%;
+}
+
+.timer-count {
+  font-size: 48px;
+  font-weight: 500;
+  color: $blueBorder;
+}
+
 .sprint-game__answer-image {
   width: 390px;
   height: 250px;
@@ -225,14 +246,14 @@
 }
 
 .pagination-circle {
-    margin: 30px 15px;
-    background: rgba(255, 255, 255, 0.7);
-    display: inline-block;
-    height: 30px;
-    width: 30px;
-    border: 2px solid black;
-    border-radius: 50%;
-  }
+  margin: 30px 15px;
+  background: rgba(255, 255, 255, 0.7);
+  display: inline-block;
+  height: 30px;
+  width: 30px;
+  border: 2px solid black;
+  border-radius: 50%;
+}
 
 .score-amount {
   font-size: 64px;
