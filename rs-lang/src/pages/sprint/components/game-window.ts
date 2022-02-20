@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import Data from 'services/api-sprint';
 import List from './list';
 import BaseComponent from '../../../common-components/base-component';
@@ -51,19 +52,163 @@ class GameWindow extends BaseComponent {
     this.levelIndex += 1;
   }
 
+  generateRandomTranslation() {
+    const randomTime = Math.trunc(Math.random() * 4);
+    const randomNumber = Math.trunc(Math.random() * 20);
+    const randomWord = randomTime === 3 ? this.correctWordData.wordTranslate : this.wordsData[randomNumber].wordTranslate;
+    return randomWord;
+  }
+
+  getVariantInfo(num: number): IVariantInfo {
+    const variantsArray: Array<HTMLElement> = Array.from(document.querySelectorAll('.level-option'));
+    const info : IVariantInfo = {
+      index: num,
+      target: variantsArray[num],
+      label: variantsArray[num].innerText,
+    };
+    return info;
+  }
+
+  addHotKeys() {
+    document.addEventListener('keydown', event1 => {
+      switch (event1.code) {
+        case 'Digit1': this.showSelectedLevel(0);
+          break;
+        case 'Digit2': this.showSelectedLevel(1);
+          break;
+        case 'Digit3': this.showSelectedLevel(2);
+          break;
+        case 'Digit4': this.showSelectedLevel(3);
+          break;
+        case 'Digit5': this.showSelectedLevel(4);
+          break;
+        case 'Digit6': this.showSelectedLevel(5);
+          break;
+      }
+
+      if (event1.code === 'Enter' && this.correctWordData !== null && this.gameStarted === true) {
+        this.onActionButtonClick();
+      }
+
+      if (event1.code === 'Enter' && this.difficultyLevel !== null && this.gameStarted === false) {
+        this.onStartButtonClick();
+      }
+    });
+  }
+
+  async handleUserClick(translation: string, userAnswer: string) {
+    const answer = {
+      meaning: `<strong>${this.correctWordData.word}</strong> - ${this.correctWordData.wordTranslate}`,
+      audio: this.correctWordData.audio,
+    };
+    if ((userAnswer === 'верно' && this.correctWordData.word === translation) || (userAnswer === 'неверно' && this.correctWordData.word !== translation)) {
+      this.userAnswersCount.correct.push(answer);
+    } else {
+      this.userAnswersCount.wrong.push(answer);
+    }
+    this.onActionButtonClick();
+  }
+
+  createWrongResultsList(resultsContainer: HTMLElement) {
+    this.createTextLine(resultsContainer, 'Heправильные ответы', 'h6', 'sprint-game__results__wrong-name');
+
+    const wrongAnswersArray: Array<string> = [];
+    this.userAnswersCount.wrong.forEach(item => {
+      wrongAnswersArray.push(item.meaning);
+    });
+
+    const answersCount = new BaseComponent(resultsContainer, 'span', 'wrong-answer__count').node;
+    answersCount.innerText = String(wrongAnswersArray.length);
+
+    const wrongResults = new List(resultsContainer, wrongAnswersArray, info => this.onSoundButtonClick(
+      this.userAnswersCount.wrong[info.index].audio
+    ));
+    wrongResults.createContainer('sprint-game__results__wrong', 'result-word');
+  }
+
+  onSoundButtonClick(url: string) {
+    const audioObject = new Audio(`https://react-learnwords-example.herokuapp.com/${url}`);
+    audioObject.play();
+  }
+
+  createCorrectResultsList(resultsContainer: HTMLElement) {
+    const correctAnswersArray: Array<string> = [];
+    this.userAnswersCount.correct.forEach(item => {
+      correctAnswersArray.push(item.meaning);
+    });
+
+    this.createTextLine(resultsContainer, 'Правильные ответы', 'h6', 'sprint-game__results__correct-name');
+
+    const answersCount = new BaseComponent(resultsContainer, 'span', 'correct-answer__count').node;
+    answersCount.innerText = String(correctAnswersArray.length);
+
+    const correctResults = new List(
+      resultsContainer,
+      correctAnswersArray,
+      info => this.onSoundButtonClick(this.userAnswersCount.correct[info.index].audio)
+    );
+    correctResults.createContainer('sprint-game__results__correct', 'result-word');
+  }
+
+  onPlayAgainButtonClick() {
+    this.gameContainer.destroy();
+    this.levelIndex = 0;
+    this.correctWordData = null;
+    this.userAnswersCount = { correct: [], wrong: [] };
+    this.difficultyLevel = null;
+    this.gameStarted = false;
+    this.createContainer();
+  }
+
+  showResults() {
+    this.gameContainer.destroy();
+    this.gameContainer = new BaseComponent(this.node, 'div', 'sprint-game__results');
+
+    this.createTextLine(this.gameContainer.node, 'Спринт', 'h4', 'sprint-game__level-name');
+
+    const resultsContainer = new BaseComponent(this.gameContainer.node, 'div', 'sprint-game__results-container').node;
+
+    this.createTextLine(resultsContainer, 'Результаты', 'h5', 'sprint-game__results-name');
+
+    this.createWrongResultsList(resultsContainer);
+    this.createCorrectResultsList(resultsContainer);
+
+    const playAgainButton = new BaseComponent(resultsContainer, 'button', 'sprint-game__button', BUTTON_TEXT.again).node;
+    playAgainButton.addEventListener('click', () => this.onPlayAgainButtonClick());
+
+    const textBookButton = new BaseComponent(resultsContainer, 'button', 'sprint-game__button', BUTTON_TEXT.toTextbook).node;
+    textBookButton.addEventListener('click', () => {
+      window.location.href = '#textbook';
+    });
+  }
+
+  async onActionButtonClick() {
+    if (this.levelIndex === 2) {
+      this.showResults();
+    } else {
+      await this.generateWordsOptions(this.difficultyLevel);
+      this.onStartButtonClick();
+    }
+  }
+
   onStartButtonClick() {
     this.gameContainer.destroy();
     this.gameContainer = new BaseComponent(this.node, 'div', 'sprint-game__level');
 
+    const randomTranslation = this.generateRandomTranslation();
+
     this.createTextLine(this.gameContainer.node, 'Спринт', 'h4', 'sprint-game__level-name');
 
     this.createTextLine(this.gameContainer.node, this.correctWordData.word, 'span', 'round-word');
-    this.createTextLine(this.gameContainer.node, this.correctWordData.wordTranslate, 'span', 'round-word-translation');
+    this.createTextLine(this.gameContainer.node, randomTranslation, 'span', 'round-word-translation');
 
     const buttonsContainer = new BaseComponent(this.gameContainer.node, 'div', 'buttons-container');
 
-    const wrongButton = new BaseComponent(buttonsContainer.node, 'button', 'wrong-answer', BUTTON_TEXT.wrong).node;
-    const correctButton = new BaseComponent(buttonsContainer.node, 'button', 'correct-answer', BUTTON_TEXT.correct).node;
+    const wrongButton = new BaseComponent(buttonsContainer.node, 'button', 'sprint-game__button wrong-answer', BUTTON_TEXT.wrong).node;
+    wrongButton.addEventListener('click', () => this.handleUserClick(randomTranslation, wrongButton.innerHTML));
+
+    const correctButton = new BaseComponent(buttonsContainer.node, 'button', 'sprint-game__button  correct-answer', BUTTON_TEXT.correct).node;
+    correctButton.addEventListener('click', () => this.handleUserClick(randomTranslation, correctButton.innerHTML));
 
     this.gameStarted = true;
   }

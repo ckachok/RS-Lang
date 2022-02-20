@@ -131,32 +131,29 @@
   font-size: 24px;
 }
 
-.level-option {
-  color: rgba(2, 116, 217, 1);
-  font-size: 32px;
-}
-
-.level-option:hover,
 .sprint-game__button:hover {
   background-color: rgba(2, 116, 217, 0.7);
   color: $whiteText;
 }
 
-.level-option,
 .sprint-game__button {
   cursor: pointer;
-  background-color: rgba(255, 255, 255, 0.7);
   border: 3px solid $greyBorder;
   border-radius: 35px;
   padding: 13px 40px;
 }
 
 .sprint-game__button {
+  width: 200px;
   text-transform: uppercase;
-  color: $greyBorder;
   font-size: 24px;
-  display: block;
-  margin-top: 30px;
+}
+
+.buttons-container {
+    width: 80%;
+    display: flex;
+    gap: 20px;
+    justify-content: center;
 }
 
 .sprint-game__answer-image {
