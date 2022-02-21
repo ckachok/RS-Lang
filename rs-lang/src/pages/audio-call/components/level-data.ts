@@ -12,7 +12,7 @@ class LevelData {
     return Math.trunc(Math.random() * 20);
   }
 
-  async getWordsData(num: number) {
+  async getWordsData(num: number): Promise<any> {
     const data = await this.data.getData(1, num);
     return data;
   }

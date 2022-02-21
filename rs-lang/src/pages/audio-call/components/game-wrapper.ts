@@ -3,6 +3,7 @@ import BaseComponent from 'common-components/base-component';
 import { DIFFICULTY_LEVELS, BUTTON_TEXT } from 'pages/audio-call/_constants';
 import { IVariantInfo, IUserAnswersCount, IWordData } from 'types/interfaces';
 import LevelData from 'pages/audio-call/components/level-data';
+import PAGE_INFO from 'pages/_constants';
 
 class GameWindow extends BaseComponent {
   private gameContainer: BaseComponent<HTMLElement>;
@@ -38,7 +39,7 @@ class GameWindow extends BaseComponent {
     return info;
   }
 
-  addHotKeys() {
+  addHotKeys(): void {
     document.addEventListener('keydown', event1 => {
       if (this.gameStarted === false) {
         switch (event1.code) {
@@ -71,41 +72,41 @@ class GameWindow extends BaseComponent {
       }
 
       if (event1.code === 'Space') {
-        this.onSoundButtonClick(this.correctWordData.audio);
+        this.handleSoundButtonClick(this.correctWordData.audio);
       }
 
       const gameButton = document.querySelector('.audio-game__button') as HTMLElement;
 
       if (event1.code === 'Enter' && this.correctWordData !== null && this.gameStarted === true) {
-        this.onActionButtonClick(gameButton);
+        this.handleActionButtonClick(gameButton);
       }
 
       if (event1.code === 'Enter' && this.difficultyLevel !== null && this.gameStarted === false) {
-        this.onStartButtonClick();
+        this.handleStartButtonClick();
       }
     });
   }
 
-  createDescription(text: string) {
+  createDescription(text: string): void {
     const description = new BaseComponent(this.gameContainer.node, 'p', 'audio-game__description').node;
     description.innerHTML = text;
   }
 
-  async onLevelClick(info: IVariantInfo) {
+  onLevelClick(info: IVariantInfo): void {
     const target = info.target as HTMLElement;
 
     if (!target.closest('li')) return;
     this.showSelectedLevel(info.index);
   }
 
-  showSelectedLevel(index: number) {
+  showSelectedLevel(index: number): void {
     this.difficultyLevel = index;
     this.levelsList.itemsArray.splice(this.difficultyLevel, 1);
     this.levelsList.itemsArray.forEach(item => item.classList.add('invisible'));
     this.generateWordsOptions(this.difficultyLevel);
   }
 
-  handleUserClick(info: IVariantInfo) {
+  handleUserClick(info: IVariantInfo): void {
     const userAnswer = info.target as HTMLElement;
     const answer = {
       meaning: `<strong>${this.correctWordData.word}</strong> - ${this.correctWordData.wordTranslate}`,
@@ -120,11 +121,11 @@ class GameWindow extends BaseComponent {
     }
   }
 
-  createAnswerImageText(correctAnswerImage: HTMLElement) {
+  createAnswerImageText(correctAnswerImage: HTMLElement): void {
     const correctAnswerText = new BaseComponent(this.gameContainer.node, 'div', 'audio-game__answer-image-text').node;
 
     const audiIcon = new BaseComponent(correctAnswerText, 'span', 'audio-game__audio-icon').node;
-    audiIcon.addEventListener('click', () => this.onSoundButtonClick(this.correctWordData.audio));
+    audiIcon.addEventListener('click', () => this.handleSoundButtonClick(this.correctWordData.audio));
 
     const correctAnswerTranscription = new BaseComponent(correctAnswerText, 'span', 'audio-game__answer-image-transcription').node;
     correctAnswerTranscription.innerHTML = `${this.correctWordData.word} ${this.correctWordData.transcription}`;
@@ -132,7 +133,7 @@ class GameWindow extends BaseComponent {
     correctAnswerImage.after(correctAnswerText);
   }
 
-  showCorrectAnswer() {
+  showCorrectAnswer(): void {
     const audioButton = document.querySelector('.audio-game__sound-button');
     const correctAnswerImage = new BaseComponent(this.gameContainer.node, 'div', 'audio-game__answer-image').node;
     correctAnswerImage.style.backgroundImage = `url(https://react-learnwords-example.herokuapp.com/${this.correctWordData.image})`;
@@ -150,7 +151,7 @@ class GameWindow extends BaseComponent {
     this.showCorrectAnswer();
   }
 
-  onSkipButtonClick() {
+  handleSkipButtonClick(): void {
     const answer = {
       meaning: `<strong>${this.correctWordData.word}</strong> - ${this.correctWordData.wordTranslate}`,
       audio: this.correctWordData.audio,
@@ -167,7 +168,7 @@ class GameWindow extends BaseComponent {
     this.showCorrectAnswer();
   }
 
-  createWrongResultsList(resultsContainer: HTMLElement) {
+  createWrongResultsList(resultsContainer: HTMLElement): void {
     this.createTitle(resultsContainer, 'Heправильные ответы', 'h6', 'audio-game__results__wrong-name');
 
     const wrongAnswersArray: Array<string> = [];
@@ -178,18 +179,18 @@ class GameWindow extends BaseComponent {
     const answersCount = new BaseComponent(resultsContainer, 'span', 'wrong-answer__count').node;
     answersCount.innerText = String(wrongAnswersArray.length);
 
-    const wrongResults = new List(resultsContainer, wrongAnswersArray, info => this.onSoundButtonClick(
+    const wrongResults = new List(resultsContainer, wrongAnswersArray, info => this.handleSoundButtonClick(
       this.userAnswersCount.wrong[info.index].audio
     ));
     wrongResults.createContainer('audio-game__results__wrong', 'result-word');
   }
 
-  createTitle(block: HTMLElement, content: string, titleName: string, className: string) {
+  createTitle(block: HTMLElement, content: string, titleName: string, className: string): void {
     const title = new BaseComponent(block, titleName, className).node;
     title.innerHTML = content;
   }
 
-  createCorrectResultsList(resultsContainer: HTMLElement) {
+  createCorrectResultsList(resultsContainer: HTMLElement): void {
     const correctAnswersArray: Array<string> = [];
     this.userAnswersCount.correct.forEach(item => {
       correctAnswersArray.push(item.meaning);
@@ -203,12 +204,12 @@ class GameWindow extends BaseComponent {
     const correctResults = new List(
       resultsContainer,
       correctAnswersArray,
-      info => this.onSoundButtonClick(this.userAnswersCount.correct[info.index].audio)
+      info => this.handleSoundButtonClick(this.userAnswersCount.correct[info.index].audio)
     );
     correctResults.createContainer('audio-game__results__correct', 'result-word');
   }
 
-  onPlayAgainButtonClick() {
+  handlePlayAgainButtonClick(): void {
     this.gameContainer.destroy();
     this.levelIndex = 0;
     this.correctWordData = null;
@@ -218,7 +219,7 @@ class GameWindow extends BaseComponent {
     this.createContainer();
   }
 
-  showResults() {
+  showResults(): void {
     this.gameContainer.destroy();
     this.gameContainer = new BaseComponent(this.node, 'div', 'audio-game__results');
 
@@ -232,15 +233,15 @@ class GameWindow extends BaseComponent {
     this.createCorrectResultsList(resultsContainer);
 
     const playAgainButton = new BaseComponent(resultsContainer, 'button', 'audio-game__button', BUTTON_TEXT.again).node;
-    playAgainButton.addEventListener('click', () => this.onPlayAgainButtonClick());
+    playAgainButton.addEventListener('click', () => this.handlePlayAgainButtonClick());
 
     const textBookButton = new BaseComponent(resultsContainer, 'button', 'audio-game__button', BUTTON_TEXT.toTextbook).node;
     textBookButton.addEventListener('click', () => {
-      window.location.href = '#textbook';
+      window.location.href = PAGE_INFO.textbook.hash;
     });
   }
 
-  async generateWordsOptions(targetNum: number) {
+  async generateWordsOptions(targetNum: number): Promise<void> {
     this.wordsData = await this.levelWords.getWordsData(targetNum);
     this.correctWordData = this.wordsData[this.levelIndex];
 
@@ -251,46 +252,46 @@ class GameWindow extends BaseComponent {
     this.levelIndex += 1;
   }
 
-  async onActionButtonClick(actionButton: HTMLElement) {
+  async handleActionButtonClick(actionButton: HTMLElement): Promise<void> {
     if (actionButton.innerHTML === BUTTON_TEXT.skip) {
-      this.onSkipButtonClick();
+      this.handleSkipButtonClick();
     } else {
       // eslint-disable-next-line no-lonely-if
       if (this.levelIndex === 20) {
         this.showResults();
       } else {
         await this.generateWordsOptions(this.difficultyLevel);
-        this.onStartButtonClick();
+        this.handleStartButtonClick();
       }
     }
   }
 
-  onSoundButtonClick(url: string) {
+  handleSoundButtonClick(url: string): void {
     const audioObject = new Audio(`https://react-learnwords-example.herokuapp.com/${url}`);
     audioObject.play();
   }
 
-  onStartButtonClick() {
+  handleStartButtonClick(): void {
     this.gameContainer.destroy();
     this.gameContainer = new BaseComponent(this.node, 'div', 'audio-game__level');
 
     this.createTitle(this.gameContainer.node, 'Аудиовызов', 'h4', 'audio-game__level-name');
 
     const soundButton = new BaseComponent(this.gameContainer.node, 'button', 'audio-game__sound-button').node;
-    soundButton.addEventListener('click', () => this.onSoundButtonClick(this.correctWordData.audio));
+    soundButton.addEventListener('click', () => this.handleSoundButtonClick(this.correctWordData.audio));
 
     const levelOptions = new List(this.gameContainer.node, this.answers.sort(), info => this.onVariantClick(info));
     levelOptions.createContainer('audio-game__level-options', 'level-option');
 
     const actionButton = new BaseComponent(this.gameContainer.node, 'button', 'audio-game__button', BUTTON_TEXT.skip).node;
-    actionButton.addEventListener('click', () => this.onActionButtonClick(actionButton));
+    actionButton.addEventListener('click', () => this.handleActionButtonClick(actionButton));
 
     this.gameStarted = true;
 
-    setTimeout(() => this.onSoundButtonClick(this.correctWordData.audio), 100);
+    setTimeout(() => this.handleSoundButtonClick(this.correctWordData.audio), 100);
   }
 
-  createContainer() {
+  createContainer(): void {
     this.gameContainer = new BaseComponent(this.node, 'div', 'audio-game');
 
     this.createTitle(this.gameContainer.node, 'Аудиовызов', 'h1', 'audio-game__name');
@@ -305,7 +306,7 @@ class GameWindow extends BaseComponent {
     const startButton = new BaseComponent(this.gameContainer.node, 'button', 'audio-game__start', BUTTON_TEXT.start).node;
     startButton.addEventListener('click', () => {
       if (this.difficultyLevel === null) return;
-      this.onStartButtonClick();
+      this.handleStartButtonClick();
     });
   }
 }
