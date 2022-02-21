@@ -94,3 +94,36 @@ export interface IDeveloperData {
   role: string;
   contribution: string;
 }
+
+export interface IVariantInfo {
+  index: number;
+  label: string;
+  target: HTMLElement;
+}
+
+export interface IWordData {
+  audio: string;
+  audioExample: string;
+  audioMeaning: string;
+  group: number;
+  id: string;
+  image: string;
+  page: number;
+  textExample: string;
+  textExampleTranslate: string;
+  textMeaning: string;
+  textMeaningTranslate: string;
+  transcription: string;
+  word: string;
+  wordTranslate: string;
+}
+
+export interface IUserAnswer {
+  meaning: string;
+  audio: string;
+}
+
+export interface IUserAnswersCount {
+  correct: Array<IUserAnswer>;
+  wrong: Array<IUserAnswer>;
+}
