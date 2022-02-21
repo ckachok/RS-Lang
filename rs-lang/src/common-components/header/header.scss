@@ -8,7 +8,6 @@
 }
 
 .user {
-  position: relative;
   display: flex;
   align-items: center;
   margin-left: auto;
@@ -27,17 +26,21 @@
     }
   }
 
-  &__log-in-button {
+  &__buttons-container {
+    position: relative;
+    margin: 0 30px;
+  }
+
+  &__authorization-btn {
     width: 48px;
     height: 48px;
-    margin: 0 30px;
     background-image: url("../../assets/svg/header/user.svg");
   }
 
-  &__log-out-button {
+  &__deauthorization-btn {
     position: absolute;
     top: 45px;
-    left: 105px;
+    left: -4px;
     font-weight: 400;
     font-size: 18px;
     line-height: 35px;
@@ -60,7 +63,7 @@
 
   &::after,
   &::before,
-  &__line {
+  &__lines {
     position: absolute;
     left: 0;
     width: 100%;
@@ -80,7 +83,7 @@
     top: 0;
   }
 
-  &__line {
+  &__lines {
     top: 10px;
   }
 
@@ -100,7 +103,7 @@
       transform: rotate(-45deg) translate(0, -50%);
     }
 
-    & .burger-menu__line {
+    & .burger-menu__lines {
       display: none;
     }
   }
