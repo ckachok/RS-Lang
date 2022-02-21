@@ -2,16 +2,15 @@ import BaseComponent from 'common-components/base-component';
 import Header from 'common-components/header/header';
 import Footer from 'common-components/footer/footer';
 import Cover from 'common-components/cover/cover';
-import Authorization from 'common-components/authorization/authorization';
 import { makeActive, makeInactive } from 'utils/secondary-functions';
-
+// import Authorization from 'common-components/authorization/authorization';
 abstract class Page {
   protected parentNode: HTMLElement;
   protected header: Header;
   protected main: BaseComponent<HTMLElement>;
   protected footer: Footer;
   private cover: Cover;
-  private authorization: Authorization;
+  // private authorization: Authorization;
 
   constructor(parentNode: HTMLElement, id: string) {
     this.parentNode = parentNode;
@@ -27,7 +26,7 @@ abstract class Page {
   }
 
   private startUserAuthorizationCycle(): void {
-    this.header.onAuthButton = () => makeActive(this.authorization.node, this.cover.node);
+    // this.header.onAuthButton = () => makeActive(this.authorization.node, this.cover.node);
   }
 
   private startMenuInteractionCycle(): void {
@@ -35,7 +34,7 @@ abstract class Page {
   }
 
   private startCoverInteractionCycle(): void {
-    this.cover.onCover = () => makeInactive(this.header.menu, this.header.burgerMenu, this.authorization.node);
+    // this.cover.onCover = () => makeInactive(this.header.menu, this.header.burgerMenu, this.authorization.node);
   }
 
   protected startPageRefreshCycle(): void {

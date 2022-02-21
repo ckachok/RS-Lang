@@ -1,1 +1,361 @@
-@import "../../variables.scss";
+@import '../../variables.scss';
+
+.sprint-game,
+.sprint-game__level,
+.sprint-game__results {
+  height: 70vh;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+
+  &__correct-name,
+  &__wrong-name {
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 500;
+    text-align: left;
+    margin: 30px 0 20px 0;
+    color: $greyColor;
+  }
+}
+
+.round-word {
+  font-size: 64px;
+  font-weight: 500;
+}
+
+.round-word-translation {
+  font-size: 48px;
+  font-weight: 500;
+}
+
+.sprint-game__results__wrong,
+.sprint-game__results__correct {
+  gap: 23px;
+  display: grid;
+}
+
+.sprint-game__level {
+  width: 86%;
+  position: relative;
+
+  &-button {
+    cursor: pointer;
+    height: 65px;
+    width: 65px;
+    font-size: 24px;
+    color: $greyColor;
+    background-color: $whiteText;
+    border-radius: 50%;
+    border: 2px solid $blueBorder;
+    text-align: center;
+    padding-top: 14px;
+
+    &:hover {
+      box-shadow: 0px -4px 40px 0px $blueBorder, 0px 4px 40px 0px $blueBorder,
+        -4px 0px 10px 0px $blueBorder, 4px 0px 10px 0px $blueBorder;
+    }
+  }
+
+  &-choice {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    width: 50%;
+    justify-content: space-around;
+    margin-top: 20px;
+    gap: 20px;
+  }
+
+  &-name {
+    font-size: 48px;
+  }
+
+  &-options {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 20px;
+    width: 100%;
+  }
+}
+
+.game__name,
+.sprint-game__description,
+.sprint-game__choice,
+.sprint-game__start,
+.sprint-game__level-name,
+.sprint-game__answer-image-name,
+.round-word,
+.round-word-translation,
+.points-amount {
+  color: $whiteText;
+  text-shadow: 2px 0 0 $greyColor, -2px 0 0 $greyColor, 0 2px 0 $greyColor,
+    0 -2px 0 $greyColor, 1px 1px $greyColor, -1px -1px 0 $greyColor,
+    1px -1px 0 $greyColor, -1px 1px 0 $greyColor;
+}
+
+.game__name {
+  font-size: 96px;
+}
+
+.game-total {
+  margin-top: 30px;
+  font-size: 30px;
+  color: green;
+  text-align: start;
+}
+
+.sprint-game__description {
+  font-size: 36px;
+  font-style: normal;
+  font-weight: 500;
+  letter-spacing: 0em;
+  text-align: center;
+  margin: 50px 0;
+}
+
+.sprint-game__choice {
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 500;
+  letter-spacing: 0em;
+}
+
+.sprint-game__start {
+  height: 60px;
+  margin-top: 40px;
+  width: 250px;
+  border-radius: 10px;
+  background-color: rgba(2, 116, 217, 0.7);
+  color: $whiteText;
+  text-transform: uppercase;
+  font-size: 24px;
+  box-shadow: 0 0 40px 40px $blueBorder inset, 0 0 0 0 $blueBorder;
+  -webkit-transition: all 150ms ease-in-out;
+  transition: all 150ms ease-in-out;
+}
+
+.sprint-game__start:hover {
+    box-shadow: 0 0 10px 0 #3498db inset, 0 0 10px 4px #3498db;
+    background-color: rgba(2, 116, 217, 0.4);
+}
+
+.sprint-game__button {
+  cursor: pointer;
+  border: 3px solid $greyColor;
+  border-radius: 35px;
+  padding: 13px 40px;
+  min-width: 200px;
+  color: $greyColor;
+  background: linear-gradient(
+    0deg,
+    rgba(255, 255, 255, 0.7),
+    rgba(255, 255, 255, 0.7)
+  );
+  text-transform: uppercase;
+  font-size: 24px;
+}
+
+.sprint-game__button:hover {
+  background-color: rgba(2, 116, 217, 0.7);
+  color: $whiteText;
+}
+
+.sprint-game__button:active {
+  transform: scale(0.8);
+}
+
+.buttons-container {
+  margin-top: 20px;
+  width: 80%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.timer-container {
+  position: absolute;
+  right: 20%;
+  top: 23%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+  background: rgba(255, 255, 255, 0.7);
+  border: 3px solid #5f5555;
+  width: 100px;
+  border-radius: 50%;
+}
+
+.timer-count {
+  font-size: 48px;
+  font-weight: 500;
+  color: $blueBorder;
+}
+
+.sprint-game__answer-image {
+  width: 390px;
+  height: 250px;
+  border-radius: 154px;
+
+  &-transcription {
+    color: $whiteText;
+    font-size: 2.5em;
+    vertical-align: top;
+    margin-left: 17px;
+  }
+}
+
+.sprint-game__results-name {
+  font-size: 36px;
+  font-style: normal;
+  font-weight: 500;
+  letter-spacing: 0em;
+  text-align: center;
+  text-transform: uppercase;
+  color: $greyColor;
+}
+
+.sprint-game__results-container {
+  width: 40%;
+  height: calc(80vh - 200px);
+  overflow: scroll;
+  margin-top: 40px;
+}
+
+.result-word {
+  font-size: 24px;
+  font-weight: 500;
+  color: $greyColor;
+
+  &::before {
+    cursor: pointer;
+    content: url(../../assets/svg/audio-call/audio-small.svg);
+    width: 31px;
+    height: 31px;
+    vertical-align: middle;
+    margin-right: 20px;
+      &:hover {
+        transform: scale(1.3);
+      }
+  }
+}
+
+.correct-answer__count,
+.wrong-answer__count {
+  display: inline-block;
+  padding: 2px 10px;
+  margin-left: 10px;
+  border-radius: 30px;
+  color: $whiteText;
+}
+
+.score-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pagination-circle {
+  margin: 30px 15px;
+  background: rgba(255, 255, 255, 0.7);
+  display: inline-block;
+  height: 30px;
+  width: 30px;
+  border: 2px solid black;
+  border-radius: 50%;
+}
+
+.score-amount {
+  font-size: 64px;
+  font-weight: 500;
+  text-align: center;
+  color: $blueBorder;
+}
+
+.points-amount {
+  font-size: 36px;
+  font-weight: 500;
+  text-align: center;
+}
+
+.sprint-game__results__correct-name,
+.sprint-game__results__wrong-name {
+  display: inline-block;
+}
+
+.correct-answer {
+  background: rgba(14, 183, 14, 0.7);
+  color: $whiteText;
+
+  &__count {
+    background: rgba(14, 183, 14, 1);
+  }
+}
+
+.wrong-answer {
+  background: rgba(255, 0, 0, 0.7);
+  color: $whiteText;
+
+  &__count {
+    background: rgba(255, 0, 0, 1);
+  }
+}
+
+@keyframes hide-button {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes make-central {
+  0% {
+    transform: scale(1);
+    box-shadow: 0px -4px 40px 0px $blueBorder, 0px 4px 40px 0px $blueBorder,
+        -4px 0px 10px 0px $blueBorder, 4px 0px 10px 0px $blueBorder;
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    position: absolute;
+    box-shadow: 0px -4px 40px 0px $blueBorder, 0px 4px 40px 0px $blueBorder,
+        -4px 0px 10px 0px $blueBorder, 4px 0px 10px 0px $blueBorder;
+  }
+}
+
+.active-level {
+  animation: make-central 2s ease-in-out 0.1s 1 normal forwards;
+}
+
+.invisible-level {
+  animation: hide-button 1s 1 ease-in-out;
+  animation-fill-mode: forwards;
+}
+
+@media (max-width: 1500px) {
+  .game__name {
+    font-size: 76px;
+  }
+}
+
+@media (max-width: 800px) {
+  .sprint-game__results-container {
+    width: 80%;
+  }
+
+  .timer-container {
+    right: 0;
+  }
+
+}
