@@ -17,6 +17,7 @@ class GameWindow extends BaseComponent {
   difficultyLevel: number;
   gameStarted: boolean;
   gameView: GameView;
+  page: number;
 
   constructor(parentNode: HTMLElement, tagName: string, className: string) {
     super(parentNode, tagName, className);
@@ -25,6 +26,7 @@ class GameWindow extends BaseComponent {
     this.correctWordData = null;
     this.difficultyLevel = null;
     this.gameStarted = false;
+    this.page = null;
   }
 
   addHotKeys() {
@@ -62,14 +64,17 @@ class GameWindow extends BaseComponent {
     const data = new Data();
     this.wordsData = await data.getData(page, group);
     this.correctWordData = this.wordsData[this.levelIndex];
+    return this.wordsData;
   }
 
   showSelectedLevel(index: number) {
-    const pageNumber = 1;
+    this.page = Math.trunc(Math.random() * 30);
     this.difficultyLevel = index;
+    const selectedLevel = this.levelsList.itemsArray[this.difficultyLevel];
     this.levelsList.itemsArray.splice(this.difficultyLevel, 1);
+    selectedLevel.classList.add('active');
     this.levelsList.itemsArray.forEach(item => item.classList.add('invisible'));
-    this.generateWordsOptions(pageNumber, this.difficultyLevel);
+    this.generateWordsOptions(this.page, this.difficultyLevel);
   }
 
   onLevelClick(info: IVariantInfo) {
@@ -142,6 +147,7 @@ class GameWindow extends BaseComponent {
     const resultsContainer = new BaseComponent(this.gameContainer.node, 'div', 'sprint-game__results-container').node;
 
     this.createTextLine(resultsContainer, 'Результаты', 'h5', 'sprint-game__results-name');
+    this.createTextLine(resultsContainer, `Набрано ${this.gameView.score} очков`, 'h5', 'game-total');
 
     this.createWrongResultsList(resultsContainer, userAnswersCount);
     this.createCorrectResultsList(resultsContainer, userAnswersCount);

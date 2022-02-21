@@ -44,6 +44,7 @@
   position: relative;
 
   &-button {
+    cursor: pointer;
     height: 65px;
     width: 65px;
     font-size: 24px;
@@ -58,14 +59,10 @@
       box-shadow: 0px -4px 40px 0px $blueBorder, 0px 4px 40px 0px $blueBorder,
         -4px 0px 10px 0px $blueBorder, 4px 0px 10px 0px $blueBorder;
     }
-
-    &:active {
-      box-shadow: 0px -4px 40px 0px $blueBorder, 0px 4px 40px 0px $blueBorder,
-        -4px 0px 10px 0px $blueBorder, 4px 0px 10px 0px $blueBorder;
-    }
   }
 
   &-choice {
+    position: relative;
     display: flex;
     flex-wrap: wrap;
     width: 50%;
@@ -106,6 +103,13 @@
   font-size: 96px;
 }
 
+.game-total {
+  margin-top: 30px;
+  font-size: 30px;
+  color: green;
+  text-align: start;
+}
+
 .sprint-game__description {
   font-size: 36px;
   font-style: normal;
@@ -131,11 +135,14 @@
   color: $whiteText;
   text-transform: uppercase;
   font-size: 24px;
+  box-shadow: 0 0 40px 40px $blueBorder inset, 0 0 0 0 $blueBorder;
+  -webkit-transition: all 150ms ease-in-out;
+  transition: all 150ms ease-in-out;
 }
 
-.sprint-game__button:hover {
-  background-color: rgba(2, 116, 217, 0.7);
-  color: $whiteText;
+.sprint-game__start:hover {
+    box-shadow: 0 0 10px 0 #3498db inset, 0 0 10px 4px #3498db;
+    background-color: rgba(2, 116, 217, 0.4);
 }
 
 .sprint-game__button {
@@ -143,9 +150,6 @@
   border: 3px solid $greyColor;
   border-radius: 35px;
   padding: 13px 40px;
-}
-
-.sprint-game__button {
   min-width: 200px;
   color: $greyColor;
   background: linear-gradient(
@@ -155,6 +159,15 @@
   );
   text-transform: uppercase;
   font-size: 24px;
+}
+
+.sprint-game__button:hover {
+  background-color: rgba(2, 116, 217, 0.7);
+  color: $whiteText;
+}
+
+.sprint-game__button:active {
+  transform: scale(0.8);
 }
 
 .buttons-container {
@@ -228,6 +241,9 @@
     height: 31px;
     vertical-align: middle;
     margin-right: 20px;
+      &:hover {
+        transform: scale(1.3);
+      }
   }
 }
 
@@ -292,8 +308,41 @@
   }
 }
 
+@keyframes hide-button {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes make-central {
+  0% {
+    transform: scale(1);
+    box-shadow: 0px -4px 40px 0px $blueBorder, 0px 4px 40px 0px $blueBorder,
+        -4px 0px 10px 0px $blueBorder, 4px 0px 10px 0px $blueBorder;
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    position: absolute;
+    box-shadow: 0px -4px 40px 0px $blueBorder, 0px 4px 40px 0px $blueBorder,
+        -4px 0px 10px 0px $blueBorder, 4px 0px 10px 0px $blueBorder;
+  }
+}
+
+.active {
+  animation: make-central 2s ease-in-out 0.1s 1 normal forwards;
+}
+
 .invisible {
-  display: none;
+  animation: hide-button 1s 1 ease-in-out;
+  animation-fill-mode: forwards;
 }
 
 @media (max-width: 1500px) {
@@ -310,4 +359,5 @@
   .timer-container {
     right: 0;
   }
+
 }
