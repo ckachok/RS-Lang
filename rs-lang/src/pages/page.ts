@@ -3,15 +3,15 @@ import Header from 'common-components/header/header';
 import Footer from 'common-components/footer/footer';
 import Cover from 'common-components/cover/cover';
 import Authorization from 'common-components/authorization/authorization';
-import { makeInactive } from 'utils/secondary-functions';
+import { makeActive, makeInactive } from 'utils/secondary-functions';
 
 abstract class Page {
   protected parentNode: HTMLElement;
   protected header: Header;
   protected main: BaseComponent<HTMLElement>;
   protected footer: Footer;
-  protected cover: Cover;
-  protected authorization: Authorization;
+  private cover: Cover;
+  private authorization: Authorization;
 
   constructor(parentNode: HTMLElement, id: string) {
     this.parentNode = parentNode;
@@ -22,16 +22,23 @@ abstract class Page {
     this.cover = new Cover(this.parentNode, 'div', 'cover');
     this.authorization = new Authorization(this.parentNode, 'div', 'authorization');
     this.startMenuInteractionCycle();
+    this.startUserAuthorizationCycle();
+    this.startCoverInteractionCycle();
+  }
+
+  private startUserAuthorizationCycle(): void {
+    this.header.onAuthButton = () => makeActive(this.authorization.node, this.cover.node);
   }
 
   private startMenuInteractionCycle(): void {
     this.header.onBurgerMenu = () => this.cover.node.classList.toggle('active');
-    this.cover.onCover = () => {
-      makeInactive(this.header.menu, this.header.burgerMenu);
-    };
   }
 
-  protected startPageRefreshCycle() {
+  private startCoverInteractionCycle(): void {
+    this.cover.onCover = () => makeInactive(this.header.menu, this.header.burgerMenu, this.authorization.node);
+  }
+
+  protected startPageRefreshCycle(): void {
     this.main.destroy();
     this.createMain();
   }
