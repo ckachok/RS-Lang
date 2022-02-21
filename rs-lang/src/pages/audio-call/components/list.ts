@@ -16,12 +16,12 @@ class List {
     this.callback = callback;
   }
 
-  createListItem(className: string) {
+  createListItem(className: string): HTMLElement {
     const listItem = new BaseComponent(this.listContainer.node, 'li', className).node;
     return listItem;
   }
 
-  onItemClick(mouseEvent: MouseEvent) {
+  onItemClick(mouseEvent: MouseEvent): void {
     const target = mouseEvent.target as HTMLElement;
 
     if (!(target.closest('li'))) return;
@@ -40,7 +40,7 @@ class List {
     }
   }
 
-  createItems(amount: number, className: string) {
+  createItems(amount: number, className: string): void {
     this.itemsArray = [];
 
     for (let i = 0; i < amount; i++) {
@@ -51,7 +51,7 @@ class List {
     this.listContainer.node.addEventListener('click', event => this.onItemClick(event));
   }
 
-  createContainer(className: string, childName: string) {
+  createContainer(className: string, childName: string): BaseComponent<HTMLElement> {
     this.listContainer = new BaseComponent(this.parentNode, 'ul', className);
     this.createItems(this.amount, childName);
     return this.listContainer;
