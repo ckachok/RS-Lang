@@ -87,7 +87,7 @@
   }
 }
 
-.sprint-game__name,
+.game__name,
 .sprint-game__description,
 .sprint-game__choice,
 .sprint-game__start,
@@ -102,7 +102,7 @@
     1px -1px 0 $greyColor, -1px 1px 0 $greyColor;
 }
 
-.sprint-game__name {
+.game__name {
   font-size: 96px;
 }
 
@@ -296,7 +296,7 @@
 }
 
 @media (max-width: 1500px) {
-  .sprint-game__name {
+  .game__name {
     font-size: 76px;
   }
 }
