@@ -7,13 +7,13 @@ import AboutTeamPage from 'pages/about-team/about-team';
 import PAGE_INFO from 'pages/_constants';
 
 class App {
-  container: HTMLElement;
+  public container: HTMLElement;
 
   constructor() {
     this.container = document.body;
   }
 
-  router(): void {
+  public router(): void {
     if (this.container.innerHTML) {
       this.container.innerHTML = '';
     }
