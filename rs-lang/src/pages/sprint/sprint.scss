@@ -161,6 +161,7 @@
   margin-top: 20px;
   width: 80%;
   display: flex;
+  flex-wrap: wrap;
   gap: 20px;
   justify-content: center;
 }
@@ -304,5 +305,9 @@
 @media (max-width: 800px) {
   .sprint-game__results-container {
     width: 80%;
+  }
+
+  .timer-container {
+    right: 0;
   }
 }

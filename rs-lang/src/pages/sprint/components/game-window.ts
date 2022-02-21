@@ -21,15 +21,46 @@ class GameWindow extends BaseComponent {
   constructor(parentNode: HTMLElement, tagName: string, className: string) {
     super(parentNode, tagName, className);
     this.createContainer();
+    this.addHotKeys();
     this.correctWordData = null;
     this.difficultyLevel = null;
     this.gameStarted = false;
   }
 
+  addHotKeys() {
+    document.addEventListener('keydown', event => {
+      switch (event.code) {
+        case 'Digit1': this.showSelectedLevel(0);
+          break;
+        case 'Digit2': this.showSelectedLevel(1);
+          break;
+        case 'Digit3': this.showSelectedLevel(2);
+          break;
+        case 'Digit4': this.showSelectedLevel(3);
+          break;
+        case 'Digit5': this.showSelectedLevel(4);
+          break;
+        case 'Digit6': this.showSelectedLevel(5);
+          break;
+      }
+
+      if (event.code === 'ArrowRight') {
+        this.gameView.handleUserClick(this.gameView.randomTranslation, 'верно');
+      }
+
+      if (event.code === 'ArrowLeft') {
+        this.gameView.handleUserClick(this.gameView.randomTranslation, 'неверно');
+      }
+
+      if (event.code === 'Enter' && this.difficultyLevel !== null && this.gameStarted === false) {
+        this.handleButtonClick();
+      }
+    });
+  }
+
   async generateWordsOptions(page: number, group: number) {
     const data = new Data();
     this.wordsData = await data.getData(page, group);
-    console.log(this.wordsData);
     this.correctWordData = this.wordsData[this.levelIndex];
   }
 
