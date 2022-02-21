@@ -1,7 +1,5 @@
 @import '../../variables.scss';
 
-@import '../../variables.scss';
-
 .sprint-game,
 .sprint-game__level,
 .sprint-game__results {
@@ -236,7 +234,7 @@
 
   &::before {
     cursor: pointer;
-    content: url(../../assets/svg/sprint/audio-small.svg);
+    content: url(../../assets/svg/audio-call/audio-small.svg);
     width: 31px;
     height: 31px;
     vertical-align: middle;
@@ -336,11 +334,11 @@
   }
 }
 
-.active {
+.active-level {
   animation: make-central 2s ease-in-out 0.1s 1 normal forwards;
 }
 
-.invisible {
+.invisible-level {
   animation: hide-button 1s 1 ease-in-out;
   animation-fill-mode: forwards;
 }

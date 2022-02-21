@@ -1,4 +1,5 @@
 /* eslint-disable max-len */
+import Data from 'services/api-sprint';
 import BaseComponent from '../../../common-components/base-component';
 import { IUserAnswersCount, IWordData } from '../../../types/interfaces';
 
@@ -57,6 +58,13 @@ class GameView {
         circle.classList.remove('correct-answer');
       }
     });
+  }
+
+  async generateWordsOptions(page: number, group: number) {
+    const data = new Data();
+    this.data = await data.getData(page, group);
+    this.correctWordData = this.data[this.levelIndex];
+    return this.data;
   }
 
   generateRandomTranslation() {

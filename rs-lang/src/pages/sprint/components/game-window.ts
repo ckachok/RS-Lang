@@ -72,8 +72,8 @@ class GameWindow extends BaseComponent {
     this.difficultyLevel = index;
     const selectedLevel = this.levelsList.itemsArray[this.difficultyLevel];
     this.levelsList.itemsArray.splice(this.difficultyLevel, 1);
-    selectedLevel.classList.add('active');
-    this.levelsList.itemsArray.forEach(item => item.classList.add('invisible'));
+    selectedLevel.classList.add('active-level');
+    this.levelsList.itemsArray.forEach(item => item.classList.add('invisible-level'));
     this.generateWordsOptions(this.page, this.difficultyLevel);
   }
 
