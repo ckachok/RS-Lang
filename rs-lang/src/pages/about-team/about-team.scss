@@ -1,1 +1,18 @@
 @import "../../variables.scss";
+
+.about-team {
+
+  &__container {
+    overflow-y: scroll;
+  }
+
+  &__title {
+    margin: 0 0 45px;
+    font-weight: 500;
+    font-size: 48px;
+    text-align: center;
+    text-shadow: 1px 0 1px #FFF, 1px 1px #FFF,
+                -1px 0 1px #FFF, 0 -1px 1px #FFF;
+    color: #5F5555;
+  }
+}
