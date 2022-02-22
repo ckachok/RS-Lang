@@ -1,0 +1,76 @@
+.levels-nav {
+  display: flex;
+  justify-content: space-between;
+
+  &__item {
+    margin: 0 15px 0 0;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 35px;
+    transition: all .5s;
+    cursor: pointer;
+
+    &:hover,
+    &.active {
+      color: #0274D9;
+      text-shadow: 0 0 10px #FFFFFF, 0 0 10px #0274D9,
+                   0 0 30px #FFFFFF, 0 0 30px #0274D9;
+      transition: all .5s;
+    }
+
+    &.hidden {
+      display: none;
+    }
+  }
+}
+
+.games-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  &__icon {
+    width: 40px;
+    height: 40px;
+    margin: 0 15px 0 0;
+    background-image: url('../../../../assets/svg/textbook/games-icon.svg');
+    background-size: cover;
+    background-repeat: no-repeat;
+  }
+
+  &__link {
+    margin: 0 15px 0 0;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 35px;
+    color: #5F5555;
+    transition: all .5s;
+
+    &:hover {
+      color: #0274D9;
+      text-shadow: 0 0 10px #FFFFFF, 0 0 10px #0274D9,
+                   0 0 30px #FFFFFF, 0 0 30px #0274D9;
+      transition: all .5s;
+    }
+  }
+}
+
+.page-counter {
+  display: flex;
+  justify-content: space-between;
+
+  &__cur,
+  &__divider,
+  &__total {
+    font-weight: 500;
+    font-size: 36px;
+    line-height: 35px;
+    color: #5F5555;
+  }
+
+  &__cur.active {
+    color: #FFD700;
+    text-shadow: 1px 0 1px #5F5555, 1px 1px #5F5555,
+                -1px 0 1px #5F5555, 0 -1px 1px #5F5555;
+  }
+}

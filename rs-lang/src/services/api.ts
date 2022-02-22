@@ -9,10 +9,12 @@ import {
   IWordData,
   IOutputDataUserWord,
   IAggregatedWords,
-  IAggregatedWordsRequest
+  IAggregatedWordsRequest,
+  IAggregatedWordData,
+  IAggregatedWordRequest
 } from 'types/interfaces';
 
-const BASE = 'http://localhost:5000';
+export const BASE = 'https://react-learnwords-example.herokuapp.com';
 
 const ENDPOINT = {
   WORDS: '/words',
@@ -236,6 +238,28 @@ class ApiLearnWords {
 
     const data: IAggregatedWords[] = await resp.json();
     return { set: data[0].paginatedResults, count: data[0].totalCount[0].count };
+  }
+
+  public async getAggregatedWord(userId: string, wordId: string): Promise<IAggregatedWordRequest> {
+    const resp = await fetch(`${BASE}${ENDPOINT.USERS}/${userId}${ENDPOINT.AGGREGATED_WORDS}/${wordId}`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${this.token}`,
+        Accept: 'application/json',
+      },
+    });
+
+    if (resp.status === 401) {
+      await this.getNewUserToken(userId);
+      await new ApiLearnWords().getAggregatedWord(userId, wordId);
+    }
+
+    if (resp.status === 404) {
+      return { error: ERROR.USER_WORD };
+    }
+
+    const data: IAggregatedWordData[] = await resp.json();
+    return { success: data[0] };
   }
 }
 

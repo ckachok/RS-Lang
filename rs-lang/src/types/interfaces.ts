@@ -88,6 +88,11 @@ export interface IAggregatedWordsRequest {
   count: number;
 }
 
+export interface IAggregatedWordRequest {
+  success?: IAggregatedWordData;
+  error?: string;
+}
+
 export interface IDeveloperData {
   name: string;
   githubName: string;
@@ -126,4 +131,10 @@ export interface IUserAnswer {
 export interface IUserAnswersCount {
   correct: Array<IUserAnswer>;
   wrong: Array<IUserAnswer>;
+}
+
+export interface ITextbookStore {
+  curDifficultyLevel: number;
+  curPageNumber: number;
+  totalPageCount: number;
 }

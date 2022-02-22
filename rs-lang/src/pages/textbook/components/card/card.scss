@@ -1,0 +1,172 @@
+.word-card {
+  position: relative;
+  width: 490px;
+  height: 610px;
+  border: 2px solid #0274D9;
+  border-radius: 35px;
+  display: flex;
+  flex-direction: column;
+  font-size: 12px;
+  background: rgba(255, 255, 255, 0.815);
+
+  &.hard {
+    border: 2px solid #7A02D9;
+    box-shadow: 0px 0px 5px #ffffff, 0px 0px 5px #7a02d9, 0px 0px 20px #ffffff, 0px 0px 20px #7a02d9;
+  }
+
+  &.learned {
+    border: 2px solid #FFD700;
+    box-shadow: 0px 0px 5px #ffffff, 0px 0px 5px #FFD700, 0px 0px 20px #ffffff, 0px 0px 20px #FFD700;
+  }
+
+  &__image {
+    position: relative;
+    background-image: url(http://localhost:8080/assets/image/word-card__image.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    align-self: center;
+    border-radius: 20px;
+    margin-top: 20px;
+    width: calc(100% - 40px);
+    height: 300px;
+  }
+
+  &__sound { //! сделано
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 31px;
+    height: 31px;
+    background-image: url('../../../../assets/svg/textbook/volume-small.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    transition: transform .5s;
+
+    &:hover { //! сделано
+      transform: scale(1.1);
+      transition: transform .5s;
+    }
+  }
+
+  &__answer-counters { //! сделано
+    position: absolute;
+    left: 50%;
+    bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    width: calc(100% - 40px);
+    padding: 0 20px;
+    transform: translate(-50%, 0);
+  }
+
+  &__incorrect-answer, //! сделано
+  &__correct-answer {
+    display: none;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 30px;
+    text-shadow: 1px 0 1px #FFF, 0 1px 1px #FFF,
+                -1px 0 1px #FFF, 0 -1px 1px #FFF;
+    color: #FA0202;
+    pointer-events: none;
+
+    &.visibility,
+    &.visibility {
+      display: inline;
+    }
+  }
+
+  &__correct-answer { //! сделано
+    color: #42FA02;
+  }
+
+  &__title {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 40px 0 40px;
+  }
+
+  &__compound-word,
+  &__learned-word {
+    position: absolute;
+    left: 40px;
+    top: 340px;
+    display: none;
+    background-image: url('../../../../assets/svg/textbook/brain.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    align-self: center;
+    width: 48px;
+    height: 48px;
+    transition: border-radius .5s linear, box-shadow .5s linear;
+
+    &.visibility,
+    &.visibility {
+      display: inline-block;
+    }
+  }
+
+  &__learned-word {
+    position: absolute;
+    left: auto;
+    right: 40px;
+    background-image: url('../../../../assets/svg/textbook/bulb.svg');
+  }
+
+  &__compound-word:hover,
+  &__compound-word.active {
+    border-radius: 100%;
+    border: 2px solid #7A02D9;
+    box-shadow: 0px 0px 5px #ffffff, 0px 0px 5px #7a02d9, 0px 0px 20px #ffffff, 0px 0px 20px #7a02d9;
+    transition: border-radius .5s linear, box-shadow .5s linear;
+  }
+
+  &__learned-word:hover,
+  &__learned-word.active {
+    border-radius: 100%;
+    border: 2px solid #FFD700;
+    box-shadow: 0px 0px 5px #ffffff, 0px 0px 5px #FFD700, 0px 0px 20px #ffffff, 0px 0px 20px #FFD700;
+    transition: border-radius .5s linear, box-shadow .5s linear;
+  }
+  
+
+  &__word-container {
+    margin: 10px 0 0 0;
+    text-align: center;
+    // font-size: 24px;
+  }
+
+  &__word,
+  &__translation,
+  &__transcription {
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 35px;
+    color: #000000;
+  }
+
+  &__translation,
+  &__transcription {
+    font-size: 18px;
+  }
+
+  &__text {
+    font-weight: 500;
+    font-size: 14px;
+  }
+
+
+  &__definition-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px 10px;
+    margin: 10px 20px 10px 20px;
+  }
+
+  &__example-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px 10px;
+    margin: 0 20px;
+  }
+}
